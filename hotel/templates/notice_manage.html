@@ -1,0 +1,78 @@
+{% extends "layout.html" %}
+
+{% block head %}
+    <title>公告管理-Neko酒店</title>
+{% endblock %}
+
+{% block css %}
+
+{% endblock %}
+
+{% block content %}
+    <div class="container main-body">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">公告管理</h3>
+            </div>
+            <div class="card-body">
+                <div>
+                    <div class="row justify-content-around">
+                        <a class="btn btn-success col-lg-1" href="/customer/add">添加</a>
+                        {#                        <div class="col-lg-2">{{ search_data }}</div>#}
+                        <div class="col-lg-4">
+                            <form method="get">
+                                <div class="input-group flex-nowrap">
+                                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                                    <input type="text" class="form-control" style="width: 10rem" name="q"
+                                           placeholder="请输入待搜索字段">
+                                    <select class="form-select" style="width: 5rem" name="m">
+                                        <option value="st">标题</option>
+                                        <option value="sc">内容</option>
+                                        <option value="sp">创建人</option>
+                                    </select>
+                                    <button type="submit" class="btn btn-outline-info">查询</button>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped" style="margin-top: 20px;">
+                            <thead>
+                            <tr class="table-primary">
+                                <th>id</th>
+                                <th>标题</th>
+                                <th>内容</th>
+                                <th>发布人</th>
+                                <th>发布时间</th>
+                                <th>失效时间</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for obj in notice %}
+                                <tr>
+                                    <td>{{ obj.id }}</td>
+                                    <td>{{ obj.notice_title }}</td>
+                                    <td>{{ obj.notice_content }}</td>
+                                    <td>
+                                        <a href="/account/?q={{ obj.notice_publisher.id }}&m=si">{{ obj.notice_publisher.account_user }}</a>
+                                    </td>
+                                    <td>{{ obj.notice_time }}</td>
+                                    <td>{{ obj.notice_expiration }}</td>
+                                    <td class="d-inline-flex">
+                                        <a class="btn btn-primary btn-sm"
+                                           href="/notice/manage/{{ obj.id }}/edit">编辑</a>
+                                        <a class="btn btn-danger btn-sm"
+                                           href="/notice/manage/{{ obj.id }}/del/">删除</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

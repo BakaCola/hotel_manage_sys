@@ -1,0 +1,35 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block head %}
+    <title>{{ notice.notice_title }}</title>
+{% endblock %}
+
+{% block css %}
+    <style>
+
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="container main-body">
+    <div class="card">
+        <div class="card-header">
+            <span class="h3">{{ notice.notice_title }}</span>
+            <a class="btn btn-outline-danger btn-sm float-end"
+               href="javascript:window.opener=null;window.open('','_self');window.close();">关闭</a>
+        </div>
+        <div class="card-body">
+            <div style="white-space: pre-line">{{ notice.notice_content }}</div>
+        </div>
+        <div class="card-footer">
+            <span style="margin-right: 5rem">发布时间：{{ notice.notice_time }}</span>
+            <span>发布人：{{ notice.notice_publisher }}</span>
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block js %}
+{% endblock %}
+

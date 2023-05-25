@@ -1,0 +1,279 @@
+{% extends "layout.html" %}
+{% load static %}
+{% block head %}
+    <title>Neko酒店</title>
+{% endblock %}
+
+{% block css %}
+    <style>
+        .card {
+            margin: 0 20px 20px 0;
+        }
+
+        .card-title {
+            text-align: center;
+        }
+
+        #mapContainer {
+            width: 100%;
+            height: 400px;
+        }
+    </style>
+
+    {#  地图样式#}
+    <style>
+        .content-window-card {
+            position: relative;
+            box-shadow: none;
+            bottom: 0;
+            left: 0;
+            width: auto;
+            padding: 0;
+        }
+
+        .content-window-card p {
+            height: 2rem;
+        }
+
+        .custom-info {
+            border: solid 1px silver;
+        }
+
+        div.info-top {
+            position: relative;
+            background: none repeat scroll 0 0 #F9F9F9;
+            border-bottom: 1px solid #CCC;
+            border-radius: 5px 5px 0 0;
+        }
+
+        div.info-top div {
+            display: inline-block;
+            color: #333333;
+            font-size: 14px;
+            font-weight: bold;
+            line-height: 31px;
+            padding: 0 10px;
+        }
+
+        div.info-top img {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            transition-duration: 0.25s;
+        }
+
+        div.info-top img:hover {
+            box-shadow: 0px 0px 5px #000;
+        }
+
+        div.info-middle {
+            font-size: 12px;
+            padding: 10px 6px;
+            line-height: 20px;
+        }
+
+        div.info-bottom {
+            height: 0px;
+            width: 100%;
+            clear: both;
+            text-align: center;
+        }
+
+        div.info-bottom img {
+            position: relative;
+            z-index: 104;
+        }
+
+        .info-middle img {
+            float: left;
+            margin-right: 6px;
+        }
+
+        .notice_content {
+            white-space: nowrap; /*设置不换行*/
+            overflow: hidden; /*设置隐藏*/
+            text-overflow: ellipsis; /*设置隐藏部分为省略号*/
+        }
+    </style>
+
+{% endblock %}
+
+{% block content %}
+    <div class="container main-body">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <h4>Neko酒店，您在外面的另一个家</h4>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="carouselAutoplaying" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-indicators">
+                                <button type="button" data-bs-target="#carouselIndicators" data-bs-slide-to="0"
+                                        class="active" aria-current="true"></button>
+                                <button type="button" data-bs-target="#carouselIndicators"
+                                        data-bs-slide-to="1"></button>
+                                <button type="button" data-bs-target="#carouselIndicators"
+                                        data-bs-slide-to="2"></button>
+                            </div>
+                            <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                    <img src="{% static 'img/hotel1.png' %}" class="d-block w-100">
+                                </div>
+                                <div class="carousel-item">
+                                    <img src="{% static 'img/hotel2.png' %}" class="d-block w-100">
+                                </div>
+                                <div class="carousel-item">
+                                    <img src="{% static 'img/hotel3.png' %}" class="d-block w-100">
+                                </div>
+                            </div>
+                            <button class="carousel-control-prev" type="button"
+                                    data-bs-target="#carouselAutoplaying" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button"
+                                    data-bs-target="#carouselAutoplaying" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <h4>找到我们 <i class="bi bi-map"></i></h4>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="mapContainer"></div>
+                        <div>地址：上海市松江区上海工程技术大学</div>
+                        <div>搭乘公共交通</div>
+                        <ul>
+                            <li>轨道交通九号线至松江大学城地铁站</li>
+                            <li>搭乘松江13路公交车至上海工程技术大学站</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-4">
+                <div class="card ">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <h4>酒店公告 <i class="bi bi-box-arrow-up-right"></i></h4>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <ul>
+                            {% for ele in notice %}
+                                <li class="notice_content"><a href="/notice/{{ ele.id }}" target="_blank">{{ ele.notice_title }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <h4>联系我们 <i class="bi bi-telephone"></i></h4>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div>联系方式</div>
+                        <ul>
+                            <li>座机：021-8888 8888， 021-9999 9999（每日8：00至23：00）</li>
+                            <li>邮箱：neko_hotel@neko.com</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <!-- 加载地图JSAPI脚本 -->
+    <script src="https://webapi.amap.com/maps?v=1.4.15&key=ebc6090e640920ae9d9be028fa1e5071"></script>
+    <script type="text/javascript">    //地图初始化时，在地图上添加一个marker标记,鼠标点击marker可弹出自定义的信息窗体
+    var map = new AMap.Map("mapContainer", {
+        resizeEnable: true,
+        center: [121.205554, 31.055900],
+        zoom: 16
+    });
+    addMarker();
+
+    //添加marker标记
+    function addMarker() {
+        map.clearMap();
+        var marker = new AMap.Marker({
+            map: map,
+            position: [121.205554, 31.055900],
+        });
+        //鼠标点击marker弹出自定义的信息窗体
+        AMap.event.addListener(marker, 'click', function () {
+            infoWindow.open(map, marker.getPosition());
+        });
+    }
+
+    //实例化信息窗体
+    var title = 'Neko酒店',
+        content = [];
+    content.push("<img src='{% static "img/hotel1.jpg" %}' style='width=80px; height:45px'>地址：上海市松江区上海工程技术大学");
+    content.push("电话：021-8888 8888");
+    var infoWindow = new AMap.InfoWindow({
+        isCustom: true,  //使用自定义窗体
+        content: createInfoWindow(title, content.join("<br/>")),
+        offset: new AMap.Pixel(16, -45)
+    });
+
+    //构建自定义信息窗体
+    function createInfoWindow(title, content) {
+        var info = document.createElement("div");
+        info.className = "custom-info input-card content-window-card";
+
+        //可以通过下面的方式修改自定义窗体的宽高
+        //info.style.width = "400px";
+        // 定义顶部标题
+        var top = document.createElement("div");
+        var titleD = document.createElement("div");
+        var closeX = document.createElement("img");
+        top.className = "info-top";
+        titleD.innerHTML = title;
+        closeX.src = "https://webapi.amap.com/images/close2.gif";
+        closeX.onclick = closeInfoWindow;
+
+        top.appendChild(titleD);
+        top.appendChild(closeX);
+        info.appendChild(top);
+
+        // 定义中部内容
+        var middle = document.createElement("div");
+        middle.className = "info-middle";
+        middle.style.backgroundColor = 'white';
+        middle.innerHTML = content;
+        info.appendChild(middle);
+
+        // 定义底部内容
+        var bottom = document.createElement("div");
+        bottom.className = "info-bottom";
+        bottom.style.position = 'relative';
+        bottom.style.top = '0px';
+        bottom.style.margin = '0 auto';
+        var sharp = document.createElement("img");
+        sharp.src = "https://webapi.amap.com/images/sharp.png";
+        bottom.appendChild(sharp);
+        info.appendChild(bottom);
+        return info;
+    }
+
+    //关闭信息窗体
+    function closeInfoWindow() {
+        map.clearInfoWindow();
+    }
+    </script>
+{% endblock %}

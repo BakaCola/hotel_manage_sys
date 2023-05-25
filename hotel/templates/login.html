@@ -1,0 +1,130 @@
+{% extends "layout.html" %}
+
+{% block head %}
+    <title>登录-Neko酒店</title>
+{% endblock %}
+
+{#{% block css %}#}
+{#    <style>#}
+{#        .login_box {#}
+{#width: fit-content;#} background-color: rgba(255, 255, 255, 0.8);
+{#            margin: 100px auto 0;#}
+{#            border: 1px solid #cccccc;#}
+{#            border-radius: 10px;#}
+{#            box-shadow: 5px 5px 10px #cccccc;#}
+{#            padding: 40px;#}
+{#        }#}
+{##}
+{#        .err_msg {#}
+{#            color: red;#}
+{#            font-size: 15px;#}
+{#            font-weight: bold;#}
+{#            height: 30px;#}
+{#            line-height: 15px;#}
+{#            margin-top: 20px;#}
+{#        }#}
+{##}
+{#        .row {#}
+{#            padding-top: 10px;#}
+{#        }#}
+{##}
+{#        .row button {#}
+{#            text-align: center;#}
+{#        }#}
+{#    </style>#}
+{##}
+{#{% endblock %}#}
+
+{% block css %}
+    <style>
+        .card {
+            margin: 10%;
+        }
+
+        .card .card-body .row {
+            margin-top: 30px;
+            padding-bottom: 10px;
+        }
+
+
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="card col-lg-4 col-auto">
+                <h4 class="card-header">登录</h4>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-auto input-group flex-nowrap">
+                                <span class="input-group-text"><i class="bi bi-person-circle"></i></span>
+                                <input type="email" class="form-control" name="user" placeholder="请输入用户名">
+                            </div>
+                            <span style=>{{ err_msg }}</span>
+                        </div>
+                        <div class="row">
+                            <div class="col-auto input-group flex-nowrap">
+                                <span class="input-group-text"><i class="bi bi-key"></i></span>
+                                <input type="password" class="form-control" name="pwd" placeholder="请输入密码">
+                            </div>
+                        </div>
+                        {#                    <div class="row text-danger flex-nowrap">#}
+                        {#                        <label class="form-label">{{ err_msg }}　</label>#}
+                        {#                    </div>#}
+                        <div class="row">
+                            <div class="col-auto">
+                                <button type="submit" class="btn btn-primary">登录</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{#{% block content %}#}
+{#    <div class="container login_box">#}
+{#        <div class="row justify-content-center">#}
+{#            <div class="col-auto">#}
+{#                <h1>登录</h1>#}
+{#            </div>#}
+{#        </div>#}
+{#        <div>#}
+{#            <form style="padding-top: 30px" method="post">#}
+{#                {% csrf_token %}#}
+{#                <div class="row justify-content-center">#}
+{#                    <div class="col col-lg-4">#}
+{#                        <label class="form-label">用户名</label>#}
+{#                        <div class="input-group flex-nowrap">#}
+{#                            <span class="input-group-text" id="addon-wrapping"><i#}
+{#                                    class="bi bi-person-circle"></i></span>#}
+{#                            <input type="email" class="form-control" id="exampleInputEmail1" placeholder="请输入用户名"#}
+{#                                   aria-label="Username" aria-describedby="emailHelp" name="user">#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="row justify-content-center">#}
+{#                    <div class="col col-lg-4">#}
+{#                        <label class="col-form-label">密码</label>#}
+{#                        <div class="input-group flex-nowrap">#}
+{#                            <span class="input-group-text" id="addon-wrapping"><i class="bi bi-key"></i></span>#}
+{#                            <input type="password" class="form-control" placeholder="请输入密码"#}
+{#                                   aria-label="Password"#}
+{#                                   aria-describedby="addon-wrapping" id="exampleInputPassword1" name="pwd">#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="row justify-content-md-center err_msg">#}
+{#                    {{ err_msg }}#}
+{#                </div>#}
+{#                <button type="submit" class="btn btn-primary">登录</button>#}
+{##}
+{#            </form>#}
+{##}
+{#        </div>#}
+{#    </div>#}
+{#{% endblock %}#}

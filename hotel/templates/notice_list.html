@@ -1,0 +1,47 @@
+{% extends 'layout.html' %}
+
+{% block head %}
+    <title>公告——Neko酒店</title>
+{% endblock %}
+
+
+{% block css %}
+    <style>
+        .notice_content {
+            white-space: nowrap;/*设置不换行*/
+            overflow: hidden; /*设置隐藏*/
+            text-overflow: ellipsis; /*设置隐藏部分为省略号*/
+        }
+    </style>
+{% endblock %}
+
+
+{% block content %}
+    <div class="container main-body">
+        <div class="card">
+            <div class="card-header">
+                <h3>公告</h3>
+            </div>
+            <div class="card-body">
+                <div>
+                    {% for ele in list %}
+                        <div class="flex-grow-1 ms-3 table-hover">
+                            <h5>{{ ele.notice_title }}</h5>
+                            <div class="notice_content">
+                                {{ ele.notice_content }}
+                            </div>
+                            <a class="btn btn-secondary btn-sm float-end" href="/notice/{{ ele.id }}" target="_blank">查看内容</a>
+                        </div>
+                        <hr/>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block jss %}
+
+{% endblock %}
+

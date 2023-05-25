@@ -1,0 +1,102 @@
+{% extends "layout.html" %}
+{% load static %}
+{% load django_bootstrap5 %}
+{% bootstrap_css %}
+{#{% bootstrap_javascript jquery='full' %}#}
+
+
+{% block head %}
+    <title>{{ title }}-Neko酒店</title>
+    {{ form.media }}
+{% endblock %}
+
+{% block css %}
+    <style>
+        .alert {
+            margin: 10px auto;
+        }
+
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="container main-body">
+        {% if prv_info %}
+            <div class="toast-container position-fixed bottom-0 end-0 p-3">
+                <div id="liveToast" class="toast text-bg-success" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="toast-header">
+                        <strong class="me-auto">添加成功！</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                    <div class="toast-body">
+                        <i class="bi bi-check"></i>{{ prv_info }}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        <div class="card col-10 col-lg-6">
+            <div class="card-body">
+                <h3 class="card-header">{{ title }}</h3>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+{#                    {% if double_list %}<div class="row">{% endif %}#}
+{#                    {% for filed in form %}#}
+{#                        {% if double_list %}<div class="col-6">{% endif %}#}
+{#                        <label>{{ filed.label }}：</label>#}
+{#                        {{ filed }}#}
+{#                        {% if filed.errors %}#}
+{#                            <ul>#}
+{#                                {% for error in filed.errors %}#}
+{#                                    <li class="text-danger">{{ error }}</li>#}
+{#                                {% endfor %}#}
+{#                            </ul>#}
+{#                        {% endif %}#}
+{#                        {% if double_list %}</div>{% endif %}#}
+{#                    {% endfor %}#}
+{#                    {% if double_list %}</div>{% endif %}#}
+
+                    {% bootstrap_form form %}
+{#                    {% bootstrap_form_errors form %}#}
+                    {% bootstrap_button '提交' button_type='submit' button_class='btn-outline-primary mt-2 me-2' %}
+                    {% if addmoreCtr %}
+                        <input type="hidden" name="addMore" id="addPlus" value="0">
+                        <button type="submit" id="addMore" class="btn btn-outline-success mt-2">提交并继续添加</button>
+                    {% endif %}
+
+{#                    <button type="submit" class="btn btn-outline-primary mt-2 me-2">提交</button>#}
+{#                    {% if addmoreCtr %}#}
+{#                        <input type="hidden" name="addMore" id="addPlus" value="0">#}
+{#                        <button type="submit" id="addMore" class="btn btn-outline-success mt-2">提交并继续添加#}
+{#                        </button>#}
+{#                    {% endif %}#}
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript">
+        $(function () {
+            bindBtnAddEvent();
+            {% if prv_info %}
+                $(".toast").toast({delay: 2000});
+                $(".toast").toast('show');
+            {% endif %}
+        })
+
+
+        function bindBtnAddEvent() {
+            $("#addMore").click(function () {
+                $("#addPlus").val("1");
+                var tmp = $("#addPlus").val();
+                console.log(tmp)
+            });
+        }
+
+
+    </script>
+{% endblock %}

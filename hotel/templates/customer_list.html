@@ -1,0 +1,80 @@
+{% extends "layout.html" %}
+
+{% block head %}
+    <title>住客信息-Neko酒店</title>
+{% endblock %}
+
+{% block css %}
+
+{% endblock %}
+
+{% block content %}
+    <div class="container main-body">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">住客管理</h3>
+            </div>
+            <div class="card-body">
+                <div>
+                    <div class="row justify-content-around">
+                        <a class="btn btn-success col-lg-1" href="/customer/add">添加</a>
+                        {#                        <div class="col-lg-2">{{ search_data }}</div>#}
+                        <div class="col-lg-4">
+                            <form method="get">
+                                <div class="input-group flex-nowrap">
+                                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                                    <input type="text" class="form-control" style="width: 10rem" name="q"
+                                           placeholder="请输入待搜索字段">
+                                    <select class="form-select" style="width: 5rem" name="m">
+                                        <option value="sn">姓名</option>
+                                        <option value="si">身份证号</option>
+                                        <option value="sc">***创建人***</option>
+                                        <option value="sp">电话号码</option>
+                                        <option value="se">邮箱</option>
+                                    </select>
+                                    <button type="submit" class="btn btn-outline-info">查询</button>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped" style="margin-top: 20px;">
+                            <thead>
+                            <tr class="table-primary">
+                                <th>id</th>
+                                <th>姓名</th>
+                                <th>身份证号</th>
+                                <th>创建人</th>
+                                <th>电话号码</th>
+                                <th>邮箱</th>
+                                {#                            <th>状态</th>#}
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for obj in customer_data %}
+                                <tr>
+                                    <td>{{ obj.id }}</td>
+                                    <td>{{ obj.customer_name }}</td>
+                                    <td>{{ obj.customer_idNumber }}</td>
+                                    <td>
+                                        <a href="/account/?q={{ obj.customer_creator.id }}&m=si">{{ obj.customer_creator.account_user }}</a>
+                                    </td>
+                                    <td>{{ obj.customer_phone }}</td>
+                                    <td>{{ obj.customer_email }}</td>
+                                    {#                                <td>{{ obj.get_customer_status_display }}</td>#}
+                                    <td>
+                                        <a class="btn btn-primary btn-sm" href="/customer/{{ obj.id }}/edit">编辑</a>
+                                        <a class="btn btn-danger btn-sm" href="/customer/{{ obj.id }}/del/">删除</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    <title>用户管理-Neko酒店</title>
+{% endblock %}
+
+{% block css %}
+    <style>
+        .card{
+            {#width: fit-content;#}
+            margin: 0 auto;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="card" style="margin-top: 50px">
+            <div class="card-header">
+                <h3 class="card-title">用户管理</h3>
+            </div>
+            <div class="card-body">
+                <div>
+                    <table class="table table-hover table-striped">
+                        <thead>
+                        <tr>
+                            <th>id</th>
+                            <th>用户名</th>
+                            <th>姓名</th>
+                            <th>电话</th>
+                            <th>邮箱</th>
+                            <th>用户组</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for obj in account_data %}
+                            <tr>
+                                <td>{{ obj.id }}</td>
+                                <td>{{ obj.account_user }}</td>
+                                <td>{{ obj.account_name }}</td>
+                                <td>{{ obj.account_phone }}</td>
+                                <td>{{ obj.account_email }}</td>
+                                <td>{{ obj.get_account_type_display }}</td>
+                                <td>{{ obj.get_account_status_display }}</td>
+                                <td>
+                                    <a class="btn btn-primary btn-sm" href="">编辑</a>
+                                    <a class="btn btn-danger btn-sm" href="">删除</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
