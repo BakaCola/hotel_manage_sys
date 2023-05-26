@@ -33,7 +33,6 @@ class Order(models.Model):
 	order_status = models.SmallIntegerField(verbose_name="订单状态", default=0,
 											choices=((0, "已预订"), (1, "已入住"), (2, "已退房")))
 	order_price = models.DecimalField(verbose_name="订单价格", max_digits=8, decimal_places=2)
-	order_room = models.ManyToManyField(verbose_name="房间", to="Room")
 
 
 class Account(models.Model):
