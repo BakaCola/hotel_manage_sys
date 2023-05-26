@@ -16,38 +16,10 @@ Including another URLconf
 """
 from django.conf import settings
 # from django.contrib import admin
-from django.urls import path, re_path
+from django.urls import path, re_path, include
 from django.views.static import serve
 
-from hotel.views import auth, index, account, customer, notice, room
-
 urlpatterns = [
-	# path("admin/", admin.site.urls),
-
-	re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}, name='media'),
-	path("", index.index),
-
-	path("room/", room.RoomList.as_view()),
-
-	path("room/manage/", room.RoomManageList.as_view()),
-
-	path("notice/", notice.notice_list),
-	path("notice/<int:pk>/", notice.notice_detail),
-
-	path("notice/manage/", notice.notice_manage_list),
-	path("notice/manage/<int:pk>/edit/", notice.notice_edit),
-
-	path("login/", auth.login),
-	path("register/", auth.register),
-	path("logout/", auth.logout),
-
-	path("account/", account.account_list),
-	path("account/add/", account.account_add),
-	path("account/<int:pk>/edit/", account.account_edit),
-	path("account/del/", account.account_del),
-
-	path("customer/", customer.customer_list),
-	path("customer/add/", customer.customer_add),
-	path("customer/<int:pk>/edit/", customer.customer_edit),
-	path("customer/<int:pk>/del/", customer.customer_del),
+	path("", include("hotel.urls")),
+	re_path(r"^media/(?P<path>.*)$", serve, {"document_root": settings.MEDIA_ROOT}, name="media"),
 ]

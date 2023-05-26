@@ -16,7 +16,7 @@ def notice_detail(request, pk):
 	return render(request, "notice_detail.html", {"notice": notice})
 
 
-def notice_manage_list(request):
+def notice_manage(request):
 	data_dict = {}
 	search_data = request.GET.get("q", "")
 	search_method = request.GET.get("m", "st")
