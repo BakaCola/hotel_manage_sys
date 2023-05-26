@@ -2,7 +2,7 @@ from django.core.exceptions import ValidationError
 from django import forms
 from django.core.validators import RegexValidator
 
-from bootstrap_datepicker_plus.widgets import DateTimePickerInput
+# from bootstrap_datepicker_plus.widgets import DateTimePickerInput
 
 from hotel.utils.modelform import BootStrapModelForm
 from hotel.models import Account, Customer, Notice, Room
@@ -81,7 +81,7 @@ class AccountAddModelForm(AccountModelForm):
 	class Meta:
 		model = Account
 		fields = ['account_user', 'account_name', 'account_password', 'confirm_password', 'account_phone',
-				  'account_email', 'account_type', 'account_status']
+		          'account_email', 'account_type', 'account_status']
 
 
 class CustomerModelForm(BootStrapModelForm):
@@ -107,14 +107,14 @@ class CustomerModelForm(BootStrapModelForm):
 
 
 class NoticeModelForm(BootStrapModelForm):
+
 	class Meta:
 		model = Notice
 		fields = "__all__"
 		widgets = {
-			"notice_time": DateTimePickerInput(options={"format": "YYYY-MM-DD HH:mm", "locale": "zh-cn"}),
-			"notice_expiration": DateTimePickerInput(options={"format": "YYYY-MM-DD HH:mm", "locale": "zh-cn"}),
+			"notice_time": forms.DateTimeInput(attrs={"type": "datetime-local", }),
+			"notice_expiration": forms.DateTimeInput(attrs={"type": "datetime-local"}),
 		}
-
 
 class RoomModelForm(BootStrapModelForm):
 	class Meta:
