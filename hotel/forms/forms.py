@@ -20,6 +20,8 @@ class AccountModelForm(BootStrapModelForm):
 		label="用户名",
 		max_length=32,
 		min_length=4,
+		validators=[RegexValidator(r'^[a-zA-Z][a-zA-Z0-9_]{3,31}$', "用户名须以字母开头，仅包含字母、数字、下划线"), ],
+
 	)
 
 	def clean_account_phone(self):
@@ -107,7 +109,6 @@ class CustomerModelForm(BootStrapModelForm):
 
 
 class NoticeModelForm(BootStrapModelForm):
-
 	class Meta:
 		model = Notice
 		fields = "__all__"
@@ -115,6 +116,7 @@ class NoticeModelForm(BootStrapModelForm):
 			"notice_time": forms.DateTimeInput(attrs={"type": "datetime-local", }),
 			"notice_expiration": forms.DateTimeInput(attrs={"type": "datetime-local"}),
 		}
+
 
 class RoomModelForm(BootStrapModelForm):
 	class Meta:
