@@ -10,7 +10,7 @@ class Room(models.Model):
 	room_type = models.CharField(verbose_name="房间类型", max_length=10)
 	room_price = models.DecimalField(verbose_name="房间价格", max_digits=8, decimal_places=2)
 	room_status = models.SmallIntegerField(verbose_name="房间状态", choices=((0, "空闲"), (1, "已预订"), (2, "已入住")),
-										   default=0)
+	                                       default=0)
 	room_description = models.TextField(verbose_name="房间描述")
 	room_img = models.ImageField(verbose_name="房间图片", upload_to="static/img/rooms/")
 
@@ -31,7 +31,7 @@ class Order(models.Model):
 	order_start_time = models.DateField(verbose_name="住房起始日期")
 	order_end_time = models.DateField(verbose_name="住房结束日期")
 	order_status = models.SmallIntegerField(verbose_name="订单状态", default=0,
-											choices=((0, "已预订"), (1, "已入住"), (2, "已退房")))
+	                                        choices=((0, "已预订"), (1, "已入住"), (2, "已退房")))
 	order_price = models.DecimalField(verbose_name="订单价格", max_digits=8, decimal_places=2)
 
 
@@ -53,7 +53,8 @@ class Notice(models.Model):
 	notice_content = models.TextField(verbose_name="通知内容", max_length=300)
 	notice_time = models.DateTimeField(verbose_name="发布时间", default=timezone.now)
 	notice_expiration = models.DateTimeField(verbose_name="失效时间")
-	notice_publisher = models.ForeignKey(verbose_name="发布人", to="Account", on_delete=models.CASCADE)
+	notice_publisher = models.ForeignKey(verbose_name="发布人", to="Account", on_delete=models.CASCADE,
+	                                     limit_choices_to={"account_type": 1})
 
 
 class OrderCustomerRoom(models.Model):
