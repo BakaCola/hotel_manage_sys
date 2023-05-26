@@ -22,6 +22,7 @@ def account_list(request):
 		"account_data": account_data,
 		"search_data": search_data,
 		"search_method": search_method,
+		"account_total": Account.objects.all().count(),
 	}
 	return render(request, "account_list.html", context)
 

@@ -22,6 +22,7 @@ def customer_list(request):
 		"customer_data": customer_data,
 		"search_data": search_data,
 		"search_method": search_method,
+		"customer_total": Customer.objects.all().count(),
 	}
 	return render(request, "customer_list.html", context)
 

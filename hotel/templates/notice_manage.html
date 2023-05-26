@@ -75,6 +75,13 @@
                             {% endfor %}
                             </tbody>
                         </table>
+                        <hr>
+                        <div class="text-center">
+                            {% if search_data %}
+                                <span>搜索到{{ notice|length }}条数据，</span>
+                            {% endif %}
+                            <span>共{{ notice_total }}条数据</span>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -32,6 +32,7 @@ def notice_manage(request):
 		"notice": notice,
 		"search_data": search_data,
 		"search_method": search_method,
+		"notice_total": Notice.objects.all().count(),
 	}
 	return render(request, "notice_manage.html", context)
 
