@@ -19,18 +19,23 @@
                     <div class="row justify-content-around">
                         <a class="btn btn-success col-lg-1" href="{% url 'notice_add' %}">添加</a>
                         {#                        <div class="col-lg-2">{{ search_data }}</div>#}
-                        <div class="col-lg-4">
+                        <div class="col-lg-5">
                             <form method="get">
                                 <div class="input-group flex-nowrap">
                                     <span class="input-group-text"><i class="bi bi-search"></i></span>
                                     <input type="text" class="form-control" style="width: 10rem" name="q"
-                                           placeholder="请输入待搜索字段">
+                                           placeholder="请输入待搜索字段" value="{{ search_data }}">
                                     <select class="form-select" style="width: 5rem" name="m">
                                         <option value="st">标题</option>
-                                        <option value="sc">内容</option>
-                                        <option value="sp">创建人</option>
+                                        <option value="sc" {% if search_method == "sc" %}selected{% endif %}>内容
+                                        </option>
+                                        <option value="sp" {% if search_method == "sp" %}selected{% endif %}>创建人
+                                        </option>
                                     </select>
-                                    <button type="submit" class="btn btn-outline-info">查询</button>
+                                    <button type="submit" class="btn btn-outline-primary">查询</button>
+                                    {% if search_data %}
+                                        <a class="btn btn-outline-danger" href="{% url 'notice_manage' %}">取消搜索</a>
+                                    {% endif %}
                                 </div>
 
                             </form>

@@ -21,6 +21,7 @@ def account_list(request):
 	context = {
 		"account_data": account_data,
 		"search_data": search_data,
+		"search_method": search_method,
 	}
 	return render(request, "account_list.html", context)
 

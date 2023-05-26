@@ -31,6 +31,7 @@ def notice_manage(request):
 	context = {
 		"notice": notice,
 		"search_data": search_data,
+		"search_method": search_method,
 	}
 	return render(request, "notice_manage.html", context)
 

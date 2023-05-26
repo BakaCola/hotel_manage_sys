@@ -21,6 +21,7 @@ def customer_list(request):
 	context = {
 		"customer_data": customer_data,
 		"search_data": search_data,
+		"search_method": search_method,
 	}
 	return render(request, "customer_list.html", context)
 
