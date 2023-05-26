@@ -17,7 +17,7 @@
             <div class="card-body">
                 <div>
                     <div class="row justify-content-around">
-                        <a class="btn btn-success col-lg-1" href="/customer/add">添加</a>
+                        <a class="btn btn-success col-lg-1" href="{% url 'customer_add' %}">添加</a>
                         {#                        <div class="col-lg-2">{{ search_data }}</div>#}
                         <div class="col-lg-4">
                             <form method="get">
@@ -59,14 +59,14 @@
                                     <td>{{ obj.customer_name }}</td>
                                     <td>{{ obj.customer_idNumber }}</td>
                                     <td>
-                                        <a href="/account/?q={{ obj.customer_creator.id }}&m=si">{{ obj.customer_creator.account_user }}</a>
+                                        <a href="{% url 'account_list' %}?q={{ obj.customer_creator.id }}&m=si">{{ obj.customer_creator.account_user }}</a>
                                     </td>
                                     <td>{{ obj.customer_phone }}</td>
                                     <td>{{ obj.customer_email }}</td>
                                     {#                                <td>{{ obj.get_customer_status_display }}</td>#}
                                     <td>
-                                        <a class="btn btn-primary btn-sm" href="/customer/{{ obj.id }}/edit">编辑</a>
-                                        <a class="btn btn-danger btn-sm" href="/customer/{{ obj.id }}/del/">删除</a>
+                                        <a class="btn btn-primary btn-sm" href="{% url 'customer_edit' obj.id %}">编辑</a>
+                                        <a class="btn btn-danger btn-sm" href="{% url 'customer_del' obj.id %}">删除</a>
                                     </td>
                                 </tr>
                             {% endfor %}

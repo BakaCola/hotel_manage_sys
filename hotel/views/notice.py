@@ -46,3 +46,11 @@ def notice_edit(request, pk):
 		form.save()
 		return redirect("/notice/manage/")
 	return render(request, "info_edit.html", {"form": form})
+
+
+def notice_add(request):
+	return None
+
+
+def notice_del(request):
+	return None

@@ -30,7 +30,7 @@
                             <div class="notice_content">
                                 {{ ele.notice_content }}
                             </div>
-                            <a class="btn btn-secondary btn-sm float-end" href="/notice/{{ ele.id }}" target="_blank">查看内容</a>
+                            <a class="btn btn-secondary btn-sm float-end" href="{% url 'notice_detail' ele.id %}" target="_blank">查看内容</a>
                         </div>
                         <hr/>
                     {% endfor %}

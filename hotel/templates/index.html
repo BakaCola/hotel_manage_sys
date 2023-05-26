@@ -171,7 +171,7 @@
                     <div class="card-body">
                         <ul>
                             {% for ele in notice %}
-                                <li class="notice_content"><a href="/notice/{{ ele.id }}" target="_blank">{{ ele.notice_title }}</a></li>
+                                <li class="notice_content"><a href="{% url 'notice_detail' ele.id %}" target="_blank">{{ ele.notice_title }}</a></li>
                             {% endfor %}
                         </ul>
                     </div>

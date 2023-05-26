@@ -74,3 +74,6 @@ def account_del(request):
 	else:
 		return JsonResponse({"status": False, "msg": "删除失败，数据不存在"})
 
+
+def account_pwd_edit(request):
+	return None

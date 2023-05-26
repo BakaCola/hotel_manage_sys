@@ -17,7 +17,7 @@
             <div class="card-body">
                 <div>
                     <div class="row justify-content-around">
-                        <a class="btn btn-success col-lg-1" href="/customer/add">添加</a>
+                        <a class="btn btn-success col-lg-1" href="{% url 'notice_add' %}">添加</a>
                         {#                        <div class="col-lg-2">{{ search_data }}</div>#}
                         <div class="col-lg-4">
                             <form method="get">
@@ -56,15 +56,15 @@
                                     <td>{{ obj.notice_title }}</td>
                                     <td>{{ obj.notice_content }}</td>
                                     <td>
-                                        <a href="/account/?q={{ obj.notice_publisher.id }}&m=si">{{ obj.notice_publisher.account_user }}</a>
+                                        <a href="{% url 'account_list' %}?q={{ obj.notice_publisher.id }}&m=si">{{ obj.notice_publisher.account_user }}</a>
                                     </td>
                                     <td>{{ obj.notice_time }}</td>
                                     <td>{{ obj.notice_expiration }}</td>
                                     <td class="d-inline-flex">
                                         <a class="btn btn-primary btn-sm"
-                                           href="/notice/manage/{{ obj.id }}/edit">编辑</a>
+                                           href="{% url 'notice_edit' obj.id %}">编辑</a>
                                         <a class="btn btn-danger btn-sm"
-                                           href="/notice/manage/{{ obj.id }}/del/">删除</a>
+                                           href="{% url 'notice_del' obj.id %}">删除</a>
                                     </td>
                                 </tr>
                             {% endfor %}

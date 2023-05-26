@@ -17,7 +17,7 @@
             <div class="card-body">
                 <div>
                     <div class="row justify-content-around">
-                        <a class="btn btn-success col-lg-1" href="/account/add/">添加</a>
+                        <a class="btn btn-success col-lg-1" href="{% url 'account_add' %}">添加</a>
                         {#                        <div class="col-lg-2">{{ search_data }}</div>#}
                         <div class="col-lg-4">
                             <form method="get">
@@ -61,9 +61,9 @@
                                     <td>{{ obj.get_account_type_display }}</td>
                                     <td>{{ obj.get_account_status_display }}</td>
                                     <td>
-                                        <a class="btn btn-primary btn-sm" href="/account/{{ obj.id }}/edit/">编辑</a>
+                                        <a class="btn btn-primary btn-sm" href="{% url 'account_edit' obj.id %}">编辑</a>
                                         <a class="btn btn-success btn-sm"
-                                           href="/account/{{ obj.id }}/editpwd/">修改密码</a>
+                                           href="{% url 'account_pwd_edit' obj.id %}">修改密码</a>
                                         {#                                    <button type="button" class="btn btn-danger btn-sm"#}
                                         {#                                            data-bs-target="#confrimDelModal" data-bs-toggle="modal">删除#}
                                         {#                                    </button>#}
@@ -124,7 +124,7 @@
             $("#btnConfirmDelete").click(function () {
                 // 点击确认删除按钮,将全局变量中设置的那个要删除的ID发送到后台
                 $.ajax({
-                    url: "/account/del/",      // => /order/delete/?uid=123
+                    url: "{% url 'account_del' %}",      // => /order/delete/?uid=123
                     type: "GET",
                     dataType: "JSON",
                     data: {
