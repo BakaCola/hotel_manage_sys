@@ -12,7 +12,7 @@ urlpatterns = [
 	path("notice/<int:pk>/", notice.notice_detail, name="notice_detail"),
 
 	path("notice/manage/", notice.notice_manage, name="notice_manage"),
-	path("notice/manage/add/", notice.notice_add, name="notice_add"),
+	path("notice/manage/add/", notice.NoticeAdd.as_view(), name="notice_add"),
 	path("notice/manage/<int:pk>/edit/", notice.notice_edit, name="notice_edit"),
 	path("notice/manage/<int:pk>/del/", notice.notice_del, name="notice_del"),
 

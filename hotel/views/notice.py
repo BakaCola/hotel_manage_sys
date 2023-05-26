@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.utils import timezone
-
+from django.views import View
 
 from hotel.models import Notice
 from hotel.forms.forms import NoticeModelForm
@@ -48,8 +48,27 @@ def notice_edit(request, pk):
 	return render(request, "info_edit.html", {"form": form})
 
 
-def notice_add(request):
-	return None
+class NoticeAdd(View):
+	context = {
+		"title": "添加公告",
+		"addMoreCtr": 1,
+		"prv_info": "",
+	}
+
+	def get(self, request):
+		self.context['form'] = NoticeModelForm()
+		return render(request, "info_edit.html", self.context)
+
+	def post(self, request):
+		self.context['form'] = NoticeModelForm(request.POST)
+		if self.context['form'].is_valid():
+			self.context['form'].save()
+			if request.POST.get("addMore") == "1":
+				self.context['form'] = NoticeModelForm()
+				self.context['prv_info'] = "公告 " + request.POST.get("notice_title") + " 已添加"
+				return render(request, "info_edit.html", self.context)
+			return redirect("/notice/manage/")
+		return render(request, "info_edit.html", self.context)
 
 
 def notice_del(request):

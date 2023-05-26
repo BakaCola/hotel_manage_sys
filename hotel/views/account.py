@@ -29,7 +29,7 @@ def account_add(request):
 	context = {
 		"form": None,
 		"title": "添加账户信息",
-		"addmoreCtr": 1,
+		"addMoreCtr": 1,
 		"prv_info": "",
 	}
 	if request.method == "GET":
