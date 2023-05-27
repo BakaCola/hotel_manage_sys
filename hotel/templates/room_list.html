@@ -1,32 +1,112 @@
 {% extends 'layout.html' %}
+{% load static %}
 
 {% block head %}
-    <title>房间预定-Neko酒店</title>
+    <title>客房管理-Neko酒店</title>
 {% endblock %}
 
 {% block css %}
-
+    <style>
+        .card {
+            margin: 0 20px 20px 0;
+        }
+    </style>
 {% endblock %}
 
 {% block content %}
     <div class="container main-body">
-        <div class="card">
-            <div class="card-header">
-                <h3>房间预定</h3>
-            </div>
-            <div class="card-body">
-                <form method="get">
-                    <div class="dropdown">
-                        <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">
-                            排序
-                        </button>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" href="#">价格</a>
-                            <a class="dropdown-item" href="#"></a>
-                            <a class="dropdown-item" href="#">链接 3</a>
+        <div class="row">
+            <div class="col-lg-7">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="h3">客房管理</span>
+                        <a class="btn btn-success text-nowrap float-end" href="{% url 'room_add' %}">添加</a>
+                    </div>
+                    <div class="card-body">
+
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped" style="margin-top: 20px;">
+                                <thead class="table-primary">
+                                <tr>
+                                    <th>客房号</th>
+                                    <th>客房类型</th>
+                                    <th>客房状态</th>
+                                    <th>关联订单</th>
+                                    <th>操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for room in room_data %}
+                                    <tr>
+                                        <td>{{ room.room_number }}</td>
+                                        <td>{{ room.room_type.roomType_name }}</td>
+                                        <td>{{ room.get_room_status_display }}</td>
+                                        <td>{{ room.order_set.first.order_idNumber }}</td>
+                                        <td>
+                                            <a href="{% url 'room_edit' room.id %}"
+                                               class="btn btn-primary btn-sm">编辑</a>
+                                            <a href="{% url 'room_del' %}?pk={{ room.id }}"
+                                               class="btn btn-danger btn-sm">删除</a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                            <hr>
+                            <div class="text-center">
+                                {% if search_data %}
+                                    <span>搜索到{{ customer_data|length }}条数据，</span>
+                                {% endif %}
+                                <span>共{{ customer_total }}条数据</span>
+                            </div>
                         </div>
                     </div>
-                </form>
+                </div>
+            </div>
+
+            <div class="col-lg-5">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="h3">房型管理</span>
+                        <span class="h5 small">(描述与图像详见编辑页)</span>
+                        <a class="btn btn-success text-nowrap float-end" href="{% url 'room_add' %}">添加</a>
+                    </div>
+                    <div class="card-body">
+
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped" style="margin-top: 20px;">
+                                <thead class="table-primary">
+                                <tr>
+                                    <th>客房类型</th>
+                                    <th>客房价格</th>
+                                    <th>操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for room in room_type_data %}
+                                    <tr>
+                                        <td>{{ room.roomType_name }}</td>
+                                        <td>{{ room.roomType_price }}</td>
+                                        <td>
+                                            <a href="{% url 'room_edit' room.id %}"
+                                               class="btn btn-primary btn-sm">编辑</a>
+                                            <a href="{% url 'room_del' %}?pk={{ room.id }}"
+                                               class="btn btn-danger btn-sm">删除</a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                            <hr>
+                            <div class="text-center">
+                                {% if search_data %}
+                                    <span>搜索到{{ customer_data|length }}条数据，</span>
+                                {% endif %}
+                                <span>共{{ customer_total }}条数据</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -35,3 +115,4 @@
 {% block js %}
 
 {% endblock %}
+
