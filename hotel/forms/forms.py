@@ -3,10 +3,11 @@ from django import forms
 from django.core.validators import RegexValidator
 
 # from bootstrap_datepicker_plus.widgets import DateTimePickerInput
+import bcrypt
 
 from hotel.utils.modelform import BootStrapModelForm
 from hotel.models import Account, Customer, Notice, Room
-from hotel.utils.encrypt import md5
+# from hotel.utils.encrypt import md5
 
 
 class AccountModelForm(BootStrapModelForm):
@@ -24,41 +25,6 @@ class AccountModelForm(BootStrapModelForm):
 
 	)
 
-	def clean_account_phone(self):
-		phone = self.cleaned_data.get("account_phone")
-		exist_data = Account.objects.exclude(pk=self.instance.pk).filter(account_phone=phone).exists()
-		if exist_data:
-			raise ValidationError("手机号已存在")
-		return phone
-
-	def clean_account_user(self):
-		user = self.cleaned_data.get("account_user")
-		exist_data = Account.objects.exclude(pk=self.instance.pk).filter(account_user=user).exists()
-		if exist_data:
-			raise ValidationError("用户名已存在")
-		return user
-
-	def clean_account_password(self):
-		password = self.cleaned_data.get("account_password")
-		if len(password) < 8:
-			raise ValidationError("密码长度不能小于8位")
-		if len(password) > 32:
-			raise ValidationError("密码长度不能大于32位")
-		return md5(password)
-
-	def clean_account_email(self):
-		email = self.cleaned_data.get("account_email")
-		exist_data = Account.objects.exclude(pk=self.instance.pk).filter(account_email=email).exists()
-		if exist_data:
-			raise ValidationError("邮箱已存在")
-		return email
-
-	class Meta:
-		model = Account
-		exclude = ['account_password']
-
-
-class AccountAddModelForm(AccountModelForm):
 	account_password = forms.CharField(
 		label="密码",
 		widget=forms.PasswordInput(),
@@ -73,17 +39,100 @@ class AccountAddModelForm(AccountModelForm):
 		min_length=8,
 	)
 
-	def clean_confirm_password(self):
-		pwd = self.cleaned_data.get("account_password")
-		confirm = self.cleaned_data.get("confirm_password")
-		if md5(confirm) != pwd:
-			raise ValidationError("密码不一致!")
-		return md5(confirm)
+	def clean_account_phone(self):
+		phone = self.cleaned_data.get("account_phone")
+		exist_data = Account.objects.exclude(pk=self.instance.pk).filter(account_phone=phone).exists()
+		if exist_data:
+			raise ValidationError("手机号已存在")
+		return phone
+
+	def clean_account_user(self):
+		user = self.cleaned_data.get("account_user")
+		exist_data = Account.objects.exclude(pk=self.instance.pk).filter(account_user=user).exists()
+		if exist_data:
+			raise ValidationError("用户名已存在")
+		return user
+
+	# def clean_account_password(self):
+	# 	password = self.cleaned_data.get("account_password")
+	# 	if len(password) < 8:
+	# 		raise ValidationError("密码长度不能小于8位")
+	# 	if len(password) > 32:
+	# 		raise ValidationError("密码长度不能大于32位")
+	# 	return md5(password)
+
+	def clean_account_email(self):
+		email = self.cleaned_data.get("account_email")
+		exist_data = Account.objects.exclude(pk=self.instance.pk).filter(account_email=email).exists()
+		if exist_data:
+			raise ValidationError("邮箱已存在")
+		return email
+
+	def save(self, commit=True):
+		user = super().save(commit=False)
+		# 对密码进行加密
+		account_password = self.cleaned_data['account_password']
+		salt = bcrypt.gensalt()
+		hash = bcrypt.hashpw(account_password.encode(), salt)
+		# 将加密后的哈希值存储到数据库中
+		user.account_password = hash.decode()
+		if commit:
+			user.save()
+		return user
+
+	def clean(self):
+		cleaned_data = super().clean()
+		account_password = cleaned_data.get('account_password')
+		confirm_password = cleaned_data.get('confirm_password')
+		# 检查两次密码是否一致
+		if account_password and confirm_password:
+			if account_password != confirm_password:
+				raise forms.ValidationError('两次密码输入不一致，请重新输入')
+		return cleaned_data
+
+	def clean_account_password(self):
+		account_password = self.cleaned_data['account_password']
+		# 如果是更新用户，需要验证用户输入的密码是否正确
+		if self.instance.pk:
+			# 从数据库中获取原始的哈希值
+			hash = self.instance.account_password.encode()
+			# 使用bcrypt来比较哈希值是否匹配
+			if not bcrypt.checkpw(account_password.encode(), hash):
+				raise forms.ValidationError('密码错误')
+		return account_password
 
 	class Meta:
 		model = Account
 		fields = ['account_user', 'account_name', 'account_password', 'confirm_password', 'account_phone',
 		          'account_email', 'account_type', 'account_status']
+
+
+# class AccountAddModelForm(AccountModelForm):
+# 	account_password = forms.CharField(
+# 		label="密码",
+# 		widget=forms.PasswordInput(),
+# 		max_length=32,
+# 		min_length=8,
+# 	)
+#
+# 	confirm_password = forms.CharField(
+# 		label="确认密码",
+# 		widget=forms.PasswordInput(),
+# 		max_length=32,
+# 		min_length=8,
+# 	)
+#
+# 	def clean_confirm_password(self):
+# 		pwd = self.cleaned_data.get("account_password")
+# 		confirm = self.cleaned_data.get("confirm_password")
+# 		if md5(confirm) != pwd:
+# 			raise ValidationError("密码不一致!")
+# 		return md5(confirm)
+#
+# 	class Meta:
+# 		model = Account
+# 		fields = ['account_user', 'account_name', 'account_password', 'confirm_password', 'account_phone',
+# 		          'account_email', 'account_type', 'account_status']
 
 
 class CustomerModelForm(BootStrapModelForm):
