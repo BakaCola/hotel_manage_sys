@@ -35,10 +35,10 @@ class Order(models.Model):
 
 
 class Account(models.Model):
-	account_user = models.CharField(verbose_name="账户名", max_length=32)
+	account_user = models.CharField(verbose_name="账户名", max_length=32, unique=True)
 	account_name = models.CharField(verbose_name="昵称", max_length=32)
-	account_phone = models.CharField(verbose_name="电话号码", max_length=11)
-	account_email = models.EmailField(verbose_name="邮箱")
+	account_phone = models.CharField(verbose_name="电话号码", max_length=11, unique=True)
+	account_email = models.EmailField(verbose_name="邮箱", unique=True)
 	account_password = models.CharField(verbose_name="密码", max_length=255)
 	account_type = models.SmallIntegerField(verbose_name="账户类型", choices=((0, "顾客"), (1, "管理员")), default=0)
 	account_status = models.SmallIntegerField(verbose_name="账户状态", choices=((0, "正常"), (1, "已封禁")), default=0)
@@ -65,5 +65,5 @@ class OrderDetail(models.Model):
 class roomType(models.Model):
 	roomType_name = models.CharField(verbose_name="房间类型", max_length=10)
 	roomType_price = models.DecimalField(verbose_name="房间价格", max_digits=8, decimal_places=2)
-	roomType_description = models.TextField(verbose_name="房间描述")
-	roomType_img = models.ImageField(verbose_name="房间图片", upload_to="static/img/rooms/")
+	roomType_description = models.TextField(verbose_name="房间描述", null=True, blank=True)
+	roomType_img = models.ImageField(verbose_name="房间图片", upload_to="static/img/rooms/", null=True, blank=True)
