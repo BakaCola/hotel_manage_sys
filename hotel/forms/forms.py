@@ -150,6 +150,14 @@ class CustomerModelForm(BootStrapModelForm):
 	def clean_customer_idNumber(self):
 		idNumber = self.cleaned_data.get("customer_idNumber")
 		idNumber = idNumber.upper()
+		wList = [7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2, 1]
+		sum = 0
+		for i in range(18):
+			sum += int(idNumber[i]) * wList[i]
+			if (i == 17 and idNumber[i] == 'X'):
+				sum += 10 * wList[i]
+		if (sum % 11 != 1):
+			raise ValidationError("身份证号错误")
 		return idNumber
 
 	class Meta:
