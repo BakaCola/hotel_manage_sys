@@ -1,12 +1,15 @@
 from django.urls import path
-from .views import index, auth, account, customer, notice, room
+from .views import index, auth, account, customer, notice, room, book
 
 urlpatterns = [
 	path("", index.index, name="index"),
 
-	path("book/", room.RoomList.as_view(), name="book_list"),
+	path("book/", book.BookList.as_view(), name="book_list"),
 
-	path("room/", room.RoomManageList.as_view(), name="room_list"),
+	path("room/", room.RoomList.as_view(), name="room_list"),
+	path("room/add/", room.RoomAdd.as_view(), name="room_add"),
+	path("room/<int:pk>/edit/", room.RoomEdit.as_view(), name="room_edit"),
+	path("room/del/", room.RoomDel.as_view(), name="room_del"),
 
 	path("notice/", notice.notice_list, name="notice_list"),
 	path("notice/<int:pk>/", notice.notice_detail, name="notice_detail"),
