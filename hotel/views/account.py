@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 
-from hotel.forms.forms import AccountModelForm
+from hotel.forms.forms import AccountModelForm, AccountAddModelForm
 from hotel.models import Account
 
 
@@ -35,15 +35,15 @@ def account_add(request):
 		"prv_info": "",
 	}
 	if request.method == "GET":
-		context["form"] = AccountModelForm()
+		context["form"] = AccountAddModelForm()
 		return render(request, "info_edit.html", context)
 	print(request.POST)
-	context["form"] = AccountModelForm(request.POST)
+	context["form"] = AccountAddModelForm(request.POST)
 	if context["form"].is_valid():
 		context["form"].save()
 
 		if request.POST.get("addMore") == "1":
-			context["form"] = AccountModelForm()
+			context["form"] = AccountAddModelForm()
 			context["prv_info"] = "用户 "+request.POST.get("account_user")+" 已添加"
 			return render(request, "info_edit.html", context)
 		return redirect("/account/")
