@@ -12,6 +12,9 @@ class Room(models.Model):
 	room_status = models.SmallIntegerField(verbose_name="房间状态", choices=((0, "空闲"), (1, "已预订"), (2, "已入住")),
 	                                       default=0)
 
+	def __str__(self):
+		return self.room_number
+
 
 class Customer(models.Model):
 	customer_idNumber = models.CharField(verbose_name="身份证号", max_length=18)
@@ -62,7 +65,7 @@ class OrderDetail(models.Model):
 	room = models.ForeignKey(verbose_name="房间", to="Room", on_delete=models.CASCADE)
 
 
-class roomType(models.Model):
+class RoomType(models.Model):
 	roomType_name = models.CharField(verbose_name="房间类型", max_length=10)
 	roomType_price = models.DecimalField(verbose_name="房间价格", max_digits=8, decimal_places=2)
 	roomType_description = models.TextField(verbose_name="房间描述", null=True, blank=True)
