@@ -28,11 +28,12 @@ class Order(models.Model):
 	order_idNumber = models.CharField(verbose_name="订单号", max_length=18)
 	order_creator = models.ForeignKey(verbose_name="订单创建人", to="Account", on_delete=models.CASCADE)
 	order_time = models.DateTimeField(verbose_name="下单时间", auto_now_add=True)
-	order_start_time = models.DateField(verbose_name="住房起始日期")
-	order_end_time = models.DateField(verbose_name="住房结束日期")
+	order_check_in = models.DateField(verbose_name="住房起始日期")
+	order_chenk_out = models.DateField(verbose_name="住房结束日期")
 	order_status = models.SmallIntegerField(verbose_name="订单状态", default=0,
 	                                        choices=((0, "已预订"), (1, "已入住"), (2, "已退房")))
 	order_price = models.DecimalField(verbose_name="订单价格", max_digits=8, decimal_places=2)
+	order_rooms = models.ManyToManyField(verbose_name="订单房间", to="Room", through="OrderDetail")
 
 
 class Account(models.Model):
@@ -57,7 +58,7 @@ class Notice(models.Model):
 	                                     limit_choices_to={"account_type": 1})
 
 
-class OrderCustomerRoom(models.Model):
+class OrderDetail(models.Model):
 	order = models.ForeignKey(verbose_name="订单", to="Order", on_delete=models.CASCADE)
 	customer = models.ForeignKey(verbose_name="顾客", to="Customer", on_delete=models.CASCADE)
 	room = models.ForeignKey(verbose_name="房间", to="Room", on_delete=models.CASCADE)
