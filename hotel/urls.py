@@ -19,9 +19,10 @@ urlpatterns = [
 	path("notice/manage/<int:pk>/edit/", notice.notice_edit, name="notice_edit"),
 	path("notice/manage/<int:pk>/del/", notice.notice_del, name="notice_del"),
 
-	path("login/", auth.login, name="login"),
+	path("login/", auth.Login.as_view(), name="login"),
 	path("register/", auth.register, name="register"),
 	path("logout/", auth.logout, name="logout"),
+	path("alert/", auth.alert, name="alert"),
 
 	path("account/", account.account_list, name="account_list"),
 	path("account/add/", account.account_add, name="account_add"),

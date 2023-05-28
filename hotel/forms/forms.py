@@ -5,7 +5,7 @@ from django.core.validators import RegexValidator
 # from bootstrap_datepicker_plus.widgets import DateTimePickerInput
 import bcrypt
 
-from hotel.utils.modelform import BootStrapModelForm
+from hotel.utils.bootstrapForm import BootStrapModelForm, BootStrapForm
 from hotel.models import Account, Customer, Notice, Room
 
 
@@ -67,6 +67,7 @@ class AccountAddModelForm(AccountModelForm):
 		max_length=32,
 		min_length=8,
 	)
+
 	def save(self, commit=True):
 		user = super().save(commit=False)
 		# 对密码进行加密
@@ -150,3 +151,22 @@ class RoomModelForm(BootStrapModelForm):
 	class Meta:
 		model = Room
 		fields = "__all__"
+
+
+class LoginForm(BootStrapForm):
+	account_user = forms.CharField(
+		label="用户名",
+		max_length=32,
+		min_length=4,
+		validators=[RegexValidator(r'^[a-zA-Z][a-zA-Z0-9_]{3,31}$', "用户名须以字母开头，仅包含字母、数字、下划线"), ],
+
+	)
+	account_password = forms.CharField(
+		label="密码",
+		widget=forms.PasswordInput(),
+		max_length=32,
+		min_length=8,
+	)
+
+	class Meta:
+		fields = ['account_user', 'account_password']

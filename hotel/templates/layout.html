@@ -67,27 +67,38 @@
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="{% url 'notice_list' %}">公告查看</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{% url 'customer_list' %}">住客管理</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"
-                       aria-expanded="false">
-                        系统管理
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{% url 'notice_manage' %}">公告管理</a></li>
-                        <li><a class="dropdown-item" href="{% url 'account_list' %}">用户管理</a></li>
-                        <li><a class="dropdown-item" href="{% url 'room_list' %}">客房管理</a></li>
-                    </ul>
-                </li>
+                {% if request.session.user %}
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{% url 'customer_list' %}">住客管理</a>
+                    </li>
+                    {% if request.session.user.type == 1 %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"
+                               aria-expanded="false">
+                                系统管理
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{% url 'notice_manage' %}">公告管理</a></li>
+                                <li><a class="dropdown-item" href="{% url 'account_list' %}">用户管理</a></li>
+                                <li><a class="dropdown-item" href="{% url 'room_list' %}">客房管理</a></li>
+                            </ul>
+                        </li>
+                    {% endif %}
+                {% endif %}
 
             </ul>
             <form class="justify-content-center">
                 <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
-                <a href="/login" class="btn btn-sm btn-outline-success"><i class="bi bi-box-arrow-in-right"></i></i>登入</a>
-                <a href="/register" class="btn btn-sm btn-outline-secondary"><i class="bi bi-person-plus"></i></i>
-                    注册</a>
+                {% if request.session.user %}
+                    <span class="nav-item" style="margin-right: 10px;">{{ request.session.user.name }}，你好！</span>
+                    <a href="/logout" class="btn btn-sm btn-outline-danger"><i class="bi bi-box-arrow-right"></i>
+                        退出</a>
+                {% else %}
+                    <a href="/login" class="btn btn-sm btn-outline-success"><i class="bi bi-box-arrow-in-right"></i></i>
+                        登入</a>
+                    <a href="/register" class="btn btn-sm btn-outline-secondary"><i class="bi bi-person-plus"></i></i>
+                        注册</a>
+                {% endif %}
             </form>
 
         </div>
