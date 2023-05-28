@@ -6,9 +6,9 @@ class AuthMiddleware(MiddlewareMixin):
 
 	def process_request(self, request):
 
-		blank_list = ["/login/", "/register/", "/logout/", "/", "/notice/", "/notice_detail/", "/book/", "/alert/"]
+		white_list = ["/login/", "/register/", "/logout/", "/", "/notice/", "/notice_detail/", "/book/", "/alert/"]
 
-		if request.path_info in blank_list:
+		if request.path_info in white_list:
 			return
 
 		info_dict = request.session.get("user")
