@@ -1,3 +1,6 @@
+import os
+import uuid
+
 from django.core.exceptions import ValidationError
 from django import forms
 from django.core.validators import RegexValidator
@@ -6,7 +9,7 @@ from django.core.validators import RegexValidator
 import bcrypt
 
 from hotel.utils.bootstrapForm import BootStrapModelForm, BootStrapForm
-from hotel.models import Account, Customer, Notice, Room
+from hotel.models import Account, Customer, Notice, Room, RoomType
 
 
 # from hotel.utils.encrypt import md5
@@ -170,3 +173,29 @@ class LoginForm(BootStrapForm):
 
 	class Meta:
 		fields = ['account_user', 'account_password']
+
+
+class RoomModelForm(BootStrapModelForm):
+	class Meta:
+		model = Room
+		fields = "__all__"
+
+
+class RoomTypeModelForm(BootStrapModelForm):
+
+	def save(self, commit=True):
+		# 调用父类的save方法，获取模型实例，但不保存到数据库
+		image = super().save(commit=False)
+		# 获取图片文件对象
+		file = image.roomType_img
+		# 修改图片文件的name属性，使用uuid来生成随机字符串
+		file.name = str(uuid.uuid4()) + os.path.splitext(file.name)[1]
+		# 根据commit参数的值来决定是否保存到数据库
+		if commit:
+			image.save()
+		# 返回模型实例
+		return image
+
+	class Meta:
+		model = RoomType
+		fields = "__all__"
