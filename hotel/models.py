@@ -6,10 +6,10 @@ from django.utils import timezone
 
 
 class Room(models.Model):
-	room_number = models.CharField(verbose_name="房间号", max_length=10, unique=True)
-	room_type = models.ForeignKey(verbose_name="房间类型", to="RoomType", on_delete=models.SET_NULL, null=True,
+	room_number = models.CharField(verbose_name="客房号", max_length=10, unique=True)
+	room_type = models.ForeignKey(verbose_name="客房类型", to="RoomType", on_delete=models.SET_NULL, null=True,
 	                              blank=True)
-	room_status = models.SmallIntegerField(verbose_name="房间状态", choices=((0, "空闲"), (1, "已预订"), (2, "已入住")),
+	room_status = models.SmallIntegerField(verbose_name="客房状态", choices=((0, "空闲"), (1, "已预订"), (2, "已入住")),
 	                                       default=0)
 
 	def __str__(self):
@@ -66,7 +66,10 @@ class OrderDetail(models.Model):
 
 
 class RoomType(models.Model):
-	roomType_name = models.CharField(verbose_name="房间类型", max_length=10)
-	roomType_price = models.DecimalField(verbose_name="房间价格", max_digits=8, decimal_places=2)
-	roomType_description = models.TextField(verbose_name="房间描述", null=True, blank=True)
-	roomType_img = models.ImageField(verbose_name="房间图片", upload_to="static/img/rooms/", null=True, blank=True)
+	roomType_name = models.CharField(verbose_name="客房类型", max_length=10)
+	roomType_price = models.DecimalField(verbose_name="客房价格", max_digits=8, decimal_places=2)
+	roomType_description = models.TextField(verbose_name="客房描述", null=True, blank=True)
+	roomType_img = models.ImageField(verbose_name="客房图片", upload_to="rooms_img/", null=True, blank=True)
+
+	def __str__(self):
+		return self.roomType_name
