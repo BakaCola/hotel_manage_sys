@@ -39,7 +39,7 @@
                 <h3 class="card-header">{{ title }}</h3>
             </div>
             <div class="card-body">
-                <form method="post" novalidate>
+                <form method="post" novalidate enctype="multipart/form-data">
                     {% csrf_token %}
 {#                    {% if double_list %}<div class="row">{% endif %}#}
 {#                    {% for filed in form %}#}
