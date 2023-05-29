@@ -37,7 +37,7 @@ def account_add(request):
 	if request.method == "GET":
 		context["form"] = AccountAddModelForm()
 		return render(request, "info_edit.html", context)
-	print(request.POST)
+	# print(request.POST)
 	context["form"] = AccountAddModelForm(request.POST)
 	if context["form"].is_valid():
 		context["form"].save()
