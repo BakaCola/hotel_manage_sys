@@ -160,7 +160,10 @@ cython_debug/
 .idea/
 
 # migration files
-*.migrations
+*.sqlite3
+*/migrations/*.py
+*/migrations/*.pyc
+*/migrations/__pycache__/
 
 
 # Django #
