@@ -90,12 +90,12 @@
                 <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
                 {% if request.session.user %}
                     <span class="nav-item" style="margin-right: 10px;">{{ request.session.user.name }}，你好！</span>
-                    <a href="/logout" class="btn btn-sm btn-outline-danger"><i class="bi bi-box-arrow-right"></i>
+                    <a href="{% url 'logout' %}" class="btn btn-sm btn-outline-danger"><i class="bi bi-box-arrow-right"></i>
                         退出</a>
                 {% else %}
-                    <a href="/login" class="btn btn-sm btn-outline-success"><i class="bi bi-box-arrow-in-right"></i></i>
-                        登入</a>
-                    <a href="/register" class="btn btn-sm btn-outline-secondary"><i class="bi bi-person-plus"></i></i>
+                    <a href="{% url 'login' %}" class="btn btn-sm btn-outline-success"><i class="bi bi-box-arrow-in-right"></i></i>
+                        登录</a>
+                    <a href="{% url 'register' %}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-person-plus"></i></i>
                         注册</a>
                 {% endif %}
             </form>
