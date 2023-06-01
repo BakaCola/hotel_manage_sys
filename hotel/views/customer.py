@@ -17,12 +17,17 @@ def customer_list(request):
 			"se": "customer_email__contains",
 		}
 		data_dict[method[search_method]] = search_data
+	if request.session.get("user")["type"] == 0:
+		data_dict["customer_creator"] = request.session.get("user")["id"]
+		total = Customer.objects.filter(**data_dict).count()
+	else:
+		total = Customer.objects.all().count()
 	customer_data = Customer.objects.filter(**data_dict)
 	context = {
 		"customer_data": customer_data,
 		"search_data": search_data,
 		"search_method": search_method,
-		"customer_total": Customer.objects.all().count(),
+		"customer_total": total,
 	}
 	return render(request, "customer_list.html", context)
 
