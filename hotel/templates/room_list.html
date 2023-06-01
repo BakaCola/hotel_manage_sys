@@ -39,7 +39,8 @@
                                 {% for room in room_data %}
                                     <tr>
                                         <td>{{ room.room_number }}</td>
-                                        <td>{% if room.room_type %}{{ room.get_room_status_display }}{% else %}未设置房型{% endif %}</td>
+                                        <td>{% if room.room_type %}{{ room.room_type.roomType_name }}{% else %}
+                                            未设置房型{% endif %}</td>
                                         <td>{{ room.get_room_status_display }}</td>
                                         <td>{{ room.order_set.first.order_idNumber }}</td>
                                         <td>
@@ -55,9 +56,9 @@
                             <hr>
                             <div class="text-center">
                                 {% if search_data %}
-                                    <span>搜索到{{ customer_data|length }}条数据，</span>
+                                    <span>搜索到{{ room_data|length }}条数据，</span>
                                 {% endif %}
-                                <span>共{{ customer_total }}条数据</span>
+                                <span>共{{ room_total }}条数据</span>
                             </div>
                         </div>
                     </div>
@@ -88,9 +89,9 @@
                                         <td>{{ room.roomType_name }}</td>
                                         <td>{{ room.roomType_price }}</td>
                                         <td>
-                                            <a href="{% url 'room_edit' room.id %}"
+                                            <a href="{% url 'room_type_edit' room.id %}"
                                                class="btn btn-primary btn-sm">编辑</a>
-                                            <a href="{% url 'room_del' %}?pk={{ room.id }}"
+                                            <a href="{% url 'room_type_del' %}?pk={{ room.id }}"
                                                class="btn btn-danger btn-sm">删除</a>
                                         </td>
                                     </tr>
@@ -100,9 +101,9 @@
                             <hr>
                             <div class="text-center">
                                 {% if search_data %}
-                                    <span>搜索到{{ customer_data|length }}条数据，</span>
+                                    <span>搜索到{{ room_type_data|length }}条数据，</span>
                                 {% endif %}
-                                <span>共{{ customer_total }}条数据</span>
+                                <span>共{{ room_type_total }}条数据</span>
                             </div>
                         </div>
                     </div>

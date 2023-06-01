@@ -12,8 +12,8 @@ urlpatterns = [
 	path("room/del/", room.RoomDel.as_view(), name="room_del"),
 
 	path("roomtype/add/", room.RoomTypeAdd.as_view(), name="room_type_add"),
-	# path("roomtype/<int:pk>/edit/", room.RoomTypeEdit.as_view(), name="room_type_edit"),
-	# path("roomtype/<int:pk>/add/", room.RoomTypeDel.as_view(), name="room_type_del"),
+	path("roomtype/<int:pk>/edit/", room.RoomTypeEdit.as_view(), name="room_type_edit"),
+	path("roomtype/del/", room.RoomTypeDel.as_view(), name="room_type_del"),
 
 	path("notice/", notice.notice_list, name="notice_list"),
 	path("notice/<int:pk>/", notice.notice_detail, name="notice_detail"),

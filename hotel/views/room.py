@@ -13,6 +13,8 @@ class RoomList(View):
 		context = {
 			"room_data": room_data,
 			"room_type_data": room_type_data,
+			"room_total": room_data.count(),
+			"room_type_total": room_type_data.count(),
 		}
 		return render(request, "room_list.html", context)
 
@@ -27,6 +29,15 @@ class RoomEdit(View):
 	def get(self, request, pk):
 		room_obj = Room.objects.filter(pk=pk).first()
 		self.context["form"] = RoomModelForm(instance=room_obj)
+		return render(request, "info_edit.html", self.context)
+
+	def post(self, request, pk):
+		room_obj = Room.objects.filter(pk=pk).first()
+		form = RoomModelForm(request.POST, instance=room_obj)
+		if form.is_valid():
+			form.save()
+			return redirect("room_list")
+		self.context["form"] = form
 		return render(request, "info_edit.html", self.context)
 
 
@@ -57,6 +68,9 @@ class RoomAdd(View):
 
 class RoomDel(View):
 	def get(self, request):
+		pk = request.GET.get("pk")
+		room_obj = Room.objects.filter(pk=pk).first()
+		room_obj.delete()
 		return redirect("room_list")
 
 
@@ -83,3 +97,33 @@ class RoomTypeAdd(View):
 			return redirect("room_list")
 		self.context["form"] = form
 		return render(request, "info_edit.html", self.context)
+
+
+class RoomTypeEdit(View):
+	context = {
+		"title": "修改房型信息",
+		"addmoreCtr": 0,
+		"prv_info": "",
+	}
+
+	def get(self, request, pk):
+		room_type_obj = RoomType.objects.filter(pk=pk).first()
+		self.context["form"] = RoomTypeModelForm(instance=room_type_obj)
+		return render(request, "info_edit.html", self.context)
+
+	def post(self, request, pk):
+		room_type_obj = RoomType.objects.filter(pk=pk).first()
+		form = RoomTypeModelForm(request.POST, request.FILES, instance=room_type_obj)
+		if form.is_valid():
+			form.save()
+			return redirect("room_list")
+		self.context["form"] = form
+		return render(request, "info_edit.html", self.context)
+
+
+class RoomTypeDel(View):
+	def get(self, request):
+		pk = request.GET.get("pk")
+		room_type_obj = RoomType.objects.filter(pk=pk).first()
+		room_type_obj.delete()
+		return redirect("room_list")
