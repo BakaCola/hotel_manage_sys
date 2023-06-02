@@ -23,7 +23,7 @@ class BookList(View):
 		today = timezone.now().strftime("%Y-%m-%d")
 		tomorrow = (timezone.now() + timezone.timedelta(days=1)).strftime("%Y-%m-%d")
 		st = request.GET.get("st", today)
-		ed = request.GET.get("ed", today)
+		ed = request.GET.get("ed", tomorrow)
 		for room_type in roomType_data:
 			room_count.append(get_available(st, ed, room_type.id).count())
 		context = {

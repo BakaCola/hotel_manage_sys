@@ -2,6 +2,7 @@
 {% load static %}
 
 
+
 {% block head %}
     <title>房间预定-Neko酒店</title>
 {% endblock %}
@@ -132,7 +133,9 @@
                     error: function (xhr, errmsg, err) {
                         console.log(errmsg); // 处理错误
                         var queryMsgElement = document.getElementById("query_msg");
+                        var loading_element = document.getElementById("loading");
                         queryMsgElement.textContent = "查询失败！";
+                        loading_element.style.display = "none";
                     }
                 });
             });
