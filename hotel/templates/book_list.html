@@ -1,6 +1,7 @@
 {% extends 'layout.html' %}
 {% load static %}
 
+
 {% block head %}
     <title>房间预定-Neko酒店</title>
 {% endblock %}
@@ -16,26 +17,24 @@
                 <h3>房间预定</h3>
             </div>
             <div class="card-body">
-                <form method="get">
-                    <div class="dropdown">
-                        <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">
-                            排序
-                        </button>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" href="#">价格</a>
-                            <a class="dropdown-item" href="#"></a>
-                            <a class="dropdown-item" href="#">链接 3</a>
-                        </div>
-                        <label for="st_date" class="form-label">入住日期：</label>
-                        <input type="date" class="form-control me-4" id="st_date" min="{{ today }}"
-                               style="width: 10rem; display: inline-block">
-                        <label for="ed_date" class="form-label">退房日期：</label>
-                        <input type="date" class="form-control" id="ed_date"
-                               style="width: 10rem; display: inline-block">
-                    </div>
+                <form id="date-form">
+                    {% csrf_token %}
+                    <label for="st" class="form-label">入住日期：</label>
+                    <input type="date" class="form-control me-4" name="st" id="st" value="{{ st }}"
+                           min="{{ today }}" style="width: 10rem; display: inline-block" required>
+                    <label for="ed" class="form-label">退房日期：</label>
+                    <input type="date" class="form-control me-4" name="ed" id="ed" value="{{ ed }}"
+                           min="{{ tomorrow }}" style="width: 10rem; display: inline-block" required>
+                    <button type="submit" class="btn btn-primary btn-sm me-4">
+                        <span class="spinner-grow spinner-grow-sm" role="status" id="loading"
+                              style="display: none"></span>
+                        查询
+                    </button>
+                    <span class="text-danger" id="query_msg"></span>
+
                 </form>
                 <hr>
-                {% for room in room_type %}
+                {% for room, room_count in roomType_data %}
                     <div class="card">
                         <div class="row g-0">
                             <div class="col-md-4">
@@ -46,12 +45,12 @@
                                     <h5 class="card-title">{{ room.roomType_name }}</h5>
                                     <p class="card-text" style="white-space: pre-line"> {{ room.roomType_description }}
                                     </p>
-                                    <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
                                 </div>
                             </div>
                             <div class="col-md-2" style="text-align: center">
                                 <div class="text-danger pt-4" style="font-size: 2rem">{{ room.roomType_price }}￥</div>
-                                <div>仅剩：5间！</div>
+                                <div>仅剩：<span id="room-{{ room.id }}">{{ room_count }}</span>间！</div>
+
                                 <a class="btn btn-primary mt-3" href="{% url 'book_check' %}">立即预定</a>
                             </div>
                         </div>
@@ -63,5 +62,104 @@
 {% endblock %}
 
 {% block js %}
+    <script>
+        $(document).ready(function () {
+            // 限制退房日期不能早于入住日期
+            var startDateInput = document.getElementById("st");
+            var endDateInput = document.getElementById("ed");
 
+// 添加事件监听器，当入住日期发生变化时
+            startDateInput.addEventListener("change", function () {
+                // 获取入住日期的值
+                var startDate = new Date(startDateInput.value);
+
+                // 计算退房日期为入住日期的后一天
+                var nextDay = new Date(startDate.getTime() + 24 * 60 * 60 * 1000);
+                var nextDayFormatted = nextDay.toISOString().split('T')[0];
+
+                // 设置退房日期的最小值为入住日期的后一天
+                endDateInput.min = nextDayFormatted;
+
+                // 如果当前退房日期早于最小值，重置退房日期的值
+                if (endDateInput.value < endDateInput.min) {
+                    endDateInput.value = endDateInput.min;
+                }
+            });
+
+            // 提交表单并处理结果
+            $("#date-form").submit(function (event) {
+                event.preventDefault(); // 阻止表单的默认提交行为
+
+                var loading_element = document.getElementById("loading");
+                loading_element.style.display = "inline-block";
+
+                var queryMsgElement = document.getElementById("query_msg");
+                queryMsgElement.textContent = "正在查询，请稍候...";
+
+                var formData = {
+                    st: $("#st").val(),
+                    ed: $("#ed").val()
+                };
+
+                $.ajax({
+                    url: "{% url 'book_list' %}",
+                    type: "POST",
+                    beforeSend: function (xhr, settings) {
+                        if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+                            // 获取并设置 CSRF 令牌
+                            xhr.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));
+                        }
+                    },
+                    data: formData,
+                    success: function (response) {
+                        var roomAvailability = response.room_availability;
+                        // 遍历房型ID及其对应的余额
+                        for (var roomType in roomAvailability) {
+                            var roomId = roomType;
+                            var roomCount = roomAvailability[roomType];
+
+                            // 获取对应的 <span> 元素
+                            var roomCountElement = document.getElementById("room-" + roomId);
+
+                            // 更新 <span> 元素的内容
+                            roomCountElement.textContent = roomCount.toString();
+                            var queryMsgElement = document.getElementById("query_msg");
+                            var loading_element = document.getElementById("loading");
+                            loading_element.style.display = "none";
+                            queryMsgElement.textContent = "查询成功！";
+                        }
+                    },
+                    error: function (xhr, errmsg, err) {
+                        console.log(errmsg); // 处理错误
+                        var queryMsgElement = document.getElementById("query_msg");
+                        queryMsgElement.textContent = "查询失败！";
+                    }
+                });
+            });
+
+            // 辅助函数：将日期对象转换为 YYYY-MM-DD 格式的字符串
+            function formatDate(date) {
+                var year = date.getFullYear();
+                var month = (date.getMonth() + 1).toString().padStart(2, "0");
+                var day = date.getDate().toString().padStart(2, "0");
+                return year + "-" + month + "-" + day;
+            }
+
+            function getCookie(name) {
+                var cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    var cookies = document.cookie.split(';');
+                    for (var i = 0; i < cookies.length; i++) {
+                        var cookie = cookies[i].trim();
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+
+        });
+    </script>
 {% endblock %}
