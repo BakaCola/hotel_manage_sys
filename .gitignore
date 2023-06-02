@@ -271,3 +271,4 @@ GitHub.sublime-settings
 !.vscode/extensions.json
 .history
 /hotel/migrations/
+/hotel/views/test.py
