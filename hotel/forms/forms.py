@@ -184,18 +184,18 @@ class RoomModelForm(BootStrapModelForm):
 
 class RoomTypeModelForm(BootStrapModelForm):
 
-	def save(self, commit=True):
-		# 调用父类的save方法，获取模型实例，但不保存到数据库
-		image = super().save(commit=False)
-		# 获取图片文件对象
-		file = image.roomType_img
-		# 修改图片文件的name属性，使用uuid来生成随机字符串
-		file.name = str(uuid.uuid4()) + os.path.splitext(file.name)[1]
-		# 根据commit参数的值来决定是否保存到数据库
-		if commit:
-			image.save()
-		# 返回模型实例
-		return image
+	# def save(self, commit=True):
+	# 	# 调用父类的save方法，获取模型实例，但不保存到数据库
+	# 	image = super().save(commit=False)
+	# 	# 获取图片文件对象
+	# 	file = image.roomType_img
+	# 	# 修改图片文件的name属性，使用uuid来生成随机字符串
+	# 	file.name = str(uuid.uuid4()) + os.path.splitext(file.name)[1]
+	# 	# 根据commit参数的值来决定是否保存到数据库
+	# 	if commit:
+	# 		image.save()
+	# 	# 返回模型实例
+	# 	return image
 
 	class Meta:
 		model = RoomType
