@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from django.utils import timezone
 
 
@@ -68,8 +69,12 @@ class OrderDetail(models.Model):
 class RoomType(models.Model):
 	roomType_name = models.CharField(verbose_name="客房类型", max_length=10)
 	roomType_price = models.DecimalField(verbose_name="客房价格", max_digits=8, decimal_places=2)
-	roomType_description = models.TextField(verbose_name="客房描述", null=True, blank=True)
-	roomType_img = models.ImageField(verbose_name="客房图片", upload_to="rooms_img/", null=True, blank=True)
+	roomType_description = models.TextField(verbose_name="客房描述")
+	roomType_img = models.ImageField(verbose_name="客房图片", upload_to="rooms_img/")
 
 	def __str__(self):
 		return self.roomType_name
+
+	def get_absolute_url(self):
+		return reverse("hotel:room_detail", kwargs={"pk": self.pk})
+
