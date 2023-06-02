@@ -31,9 +31,9 @@ class Order(models.Model):
 	order_creator = models.ForeignKey(verbose_name="订单创建人", to="Account", on_delete=models.CASCADE)
 	order_time = models.DateTimeField(verbose_name="下单时间", auto_now_add=True)
 	order_check_in = models.DateField(verbose_name="住房起始日期")
-	order_chenk_out = models.DateField(verbose_name="住房结束日期")
+	order_check_out = models.DateField(verbose_name="住房结束日期")
 	order_status = models.SmallIntegerField(verbose_name="订单状态", default=0,
-	                                        choices=((0, "已预订"), (1, "已入住"), (2, "已退房")))
+	                                        choices=((0, "已预订"), (1, "已入住"), (2, "已完成"), (3, "已取消")))
 	order_price = models.DecimalField(verbose_name="订单价格", max_digits=8, decimal_places=2)
 	order_rooms = models.ManyToManyField(verbose_name="订单房间", to="Room", through="OrderDetail")
 
