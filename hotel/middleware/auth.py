@@ -6,7 +6,7 @@ class AuthMiddleware(MiddlewareMixin):
 
 	def process_request(self, request):
 
-		white_list = ["/login/", "/register/", "/logout/", "/", "/notice/", "/notice_detail/", "/book/", "/alert/"]
+		white_list = ["/login/", "/register/", "/logout/", "/", "/notice/", "/notice_detail/", "/book/", "/alert/", "favicon.ico"]
 
 		if request.path_info in white_list:
 			return
