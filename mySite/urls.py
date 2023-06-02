@@ -20,6 +20,6 @@ from django.urls import path, re_path, include
 from django.views.static import serve
 
 urlpatterns = [
-	path("", include("hotel.urls")),
 	re_path(r"^media/(?P<path>.*)$", serve, {"document_root": settings.MEDIA_ROOT}, name="media"),
+	path("", include("hotel.urls")),
 ]
