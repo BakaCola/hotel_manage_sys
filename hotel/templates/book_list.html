@@ -1,4 +1,5 @@
 {% extends 'layout.html' %}
+{% load static %}
 
 {% block head %}
     <title>房间预定-Neko酒店</title>
@@ -25,8 +26,37 @@
                             <a class="dropdown-item" href="#"></a>
                             <a class="dropdown-item" href="#">链接 3</a>
                         </div>
+                        <label for="st_date" class="form-label">入住日期：</label>
+                        <input type="date" class="form-control me-4" id="st_date" min="{{ today }}"
+                               style="width: 10rem; display: inline-block">
+                        <label for="ed_date" class="form-label">退房日期：</label>
+                        <input type="date" class="form-control" id="ed_date"
+                               style="width: 10rem; display: inline-block">
                     </div>
                 </form>
+                <hr>
+                {% for room in room_type %}
+                    <div class="card">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <img src="{{ room.roomType_img.url }}" style="width: 320px; height: 180px">
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ room.roomType_name }}</h5>
+                                    <p class="card-text" style="white-space: pre-line"> {{ room.roomType_description }}
+                                    </p>
+                                    <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                                </div>
+                            </div>
+                            <div class="col-md-2" style="text-align: center">
+                                <div class="text-danger pt-4" style="font-size: 2rem">{{ room.roomType_price }}￥</div>
+                                <div>仅剩：5间！</div>
+                                <a class="btn btn-primary mt-3" href="{% url 'book_check' %}">立即预定</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
             </div>
         </div>
     </div>
