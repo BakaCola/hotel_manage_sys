@@ -1,0 +1,159 @@
+{% extends "layout.html" %}
+
+{% block head %}
+    <title>订单管理-Neko酒店</title>
+{% endblock %}
+
+{% block css %}
+
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">订单管理</h3>
+            </div>
+            <div class="card-body">
+                <div>
+                    <div class="row justify-content-around">
+                        <div class="col-lg-5">
+                            <form method="get">
+                                <div class="input-group flex-nowrap">
+                                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                                    <input type="text" class="form-control" style="width: 10rem" name="q"
+                                           placeholder="请输入待搜索字段" value="{{ search_data }}">
+                                    <select class="form-select" style="width: 5rem" name="m">
+                                        <option value="su">用户名</option>
+                                        <option value="sp" {% if search_method == "sp" %}selected{% endif %}>电话号码
+                                        </option>
+                                        <option value="se" {% if search_method == "se" %}selected{% endif %}>邮箱
+                                        </option>
+                                    </select>
+                                    <div class="btn-group" role="group">
+                                        <button type="submit" class="btn btn-outline-primary">查询</button>
+                                        {% if search_data %}
+                                            <a class="btn btn-outline-danger"
+                                               href="{% url 'account_list' %}">取消搜索</a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped" style="margin-top: 20px;">
+                            <thead>
+                            <tr class="table-primary">
+                                <th>id</th>
+                                <th>订单号</th>
+                                <th>创建人</th>
+                                <th>创建时间</th>
+                                <th>入住时间</th>
+                                <th>退房时间</th>
+                                <th>订单状态</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for obj in order_data %}
+                                <tr>
+                                    <td>{{ obj.id }}</td>
+                                    <td>{{ obj.order_idNumber }}</td>
+                                    <td>{{ obj.order_creator.account_user }}</td>
+                                    <td>{{ obj.order_time }}</td>
+                                    <td>{{ obj.order_check_in }}</td>
+                                    <td>{{ obj.order_check_out }}</td>
+                                    <td>{{ obj.get_order_status_display }}</td>
+
+                                    <td>
+                                        <a class="btn btn-primary btn-sm"
+                                           href="{% url 'account_edit' obj.id %}">查看详细</a>
+                                        <button type="button" class="btn btn-danger btn-sm btn-delete"
+                                                uid="{{ obj.id }}">取消订单
+                                        </button>
+                                        {% if request.session.user.type == 1 %}
+                                            <a class="btn btn-success btn-sm" href="#">确认入住</a>
+                                            <a class="btn btn-warning btn-sm" href="#">确认退房</a>
+                                        {% endif %}
+
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        <hr>
+                        <div class="text-center">
+                            {% if search_data %}
+                                <span>搜索到{{ order_data|length }}条数据，</span>
+                            {% endif %}
+                            <span>共{{ order_total }}条数据</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="confrimDelModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">删除用户？</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    确认删除用户嘛？
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" id="btnConfirmDelete" class="btn btn-danger">确认删除</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript">
+        var DELETE_ID;
+
+        $(function () {
+            bindBtnDeleteEvent();
+            bindBtnConfirmDeleteEvent();
+        })
+
+
+        function bindBtnDeleteEvent() {
+
+            $(".btn-delete").click(function () {
+                $("#confrimDelModal").modal('show');
+                //获取当前行的ID
+                DELETE_ID = $(this).attr("uid");
+                console.log(DELETE_ID)
+            });
+        }
+
+        function bindBtnConfirmDeleteEvent() {
+            $("#btnConfirmDelete").click(function () {
+                // 点击确认删除按钮,将全局变量中设置的那个要删除的ID发送到后台
+                $.ajax({
+                    url: "{% url 'account_del' %}",      // => /order/delete/?uid=123
+                    type: "GET",
+                    dataType: "JSON",
+                    data: {
+                        uid: DELETE_ID
+                    },
+                    success: function (res) {
+                        if (res.status) {
+                            location.reload();
+                        } else {
+                            alert(res.error);
+                        }
+                    }
+                })
+            });
+        }
+    </script>
+{% endblock %}
