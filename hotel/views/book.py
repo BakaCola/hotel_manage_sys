@@ -8,8 +8,8 @@ from hotel.models import Room, RoomType, OrderDetail
 
 def get_available(start, end, room_type_id):
 	all_room = Room.objects.filter(room_type_id=room_type_id)
-	booked_room = OrderDetail.objects.filter(order__order_check_in__lte=end,
-	                                         order__order_check_out__gte=start).values_list('room', flat=True)
+	booked_room = OrderDetail.objects.filter(order__order_check_in__lt=end,
+	                                         order__order_check_out__gt=start).values_list('room', flat=True)
 	available_room = all_room.exclude(id__in=booked_room)
 	# available_room_numbers = available_room.values_list('room_number', flat=True)
 	return available_room
