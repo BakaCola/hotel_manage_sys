@@ -110,6 +110,13 @@ class AccountAddModelForm(AccountModelForm):
 		          'account_email', 'account_type', 'account_status']
 
 
+class AccountRegisterModelForm(AccountAddModelForm):
+	class Meta:
+		model = Account
+		fields = ['account_user', 'account_name', 'account_password', 'confirm_password', 'account_phone',
+		          'account_email']
+
+
 class CustomerModelForm(BootStrapModelForm):
 	customer_phone = forms.CharField(
 		label="手机号",
