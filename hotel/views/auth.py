@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import View
 
-from hotel.forms.forms import LoginForm
+from hotel.forms.forms import LoginForm, AccountRegisterModelForm
 from hotel.models import Account
 
 
@@ -27,17 +27,14 @@ class Login(View):
 
 
 def register(request):
+	form = AccountRegisterModelForm()
 	if request.method == "GET":
-		return render(request, "register.html")
-	elif request.method == "POST":
-		print(request.POST)
-		user = request.POST.get("user")
-		pwd = request.POST.get("pwd")
-		pwd2 = request.POST.get("pwd2")
-		if pwd == pwd2:
-			return render(request, "login.html", {"msg": "注册成功"})
-		else:
-			return render(request, "register.html", {"msg": "两次密码不一致"})
+		return render(request, "register.html", {"form": form})
+	form = AccountRegisterModelForm(request.POST)
+	if form.is_valid():
+		form.save()
+		return redirect("login")
+	return render(request, "register.html", {"form": form})
 
 
 def logout(request):
