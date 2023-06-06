@@ -8,6 +8,7 @@
     <script src="{% static 'plugins/bootstrap-5.3.0-alpha3-dist/js/bootstrap.bundle.js' %}"></script>
     <link rel="stylesheet" href="{% static 'plugins/bootstrap-5.3.0-alpha3-dist/css/bootstrap.css' %}">
     <link rel="stylesheet" href="{% static 'plugins/bootstrap-icons-1.10.5/font/bootstrap-icons.min.css' %}">
+    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
     {% block head %}{% endblock %}
     <style>
         body {
@@ -61,12 +62,15 @@
                     <a class="nav-link active" aria-current="page" href="{% url 'index' %}">主页</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{% url 'book_list' %}">客房预定</a>
-                </li>
-                <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="{% url 'notice_list' %}">公告查看</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{% url 'book_list' %}">客房预定</a>
+                </li>
                 {% if request.session.user %}
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{% url 'order_list' %}">订单查看</a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="{% url 'customer_list' %}">住客管理</a>
                     </li>
@@ -90,12 +94,15 @@
                 <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
                 {% if request.session.user %}
                     <span class="nav-item" style="margin-right: 10px;">{{ request.session.user.name }}，你好！</span>
-                    <a href="{% url 'logout' %}" class="btn btn-sm btn-outline-danger"><i class="bi bi-box-arrow-right"></i>
+                    <a href="{% url 'logout' %}" class="btn btn-sm btn-outline-danger"><i
+                            class="bi bi-box-arrow-right"></i>
                         退出</a>
                 {% else %}
-                    <a href="{% url 'login' %}" class="btn btn-sm btn-outline-success"><i class="bi bi-box-arrow-in-right"></i></i>
+                    <a href="{% url 'login' %}" class="btn btn-sm btn-outline-success"><i
+                            class="bi bi-box-arrow-in-right"></i></i>
                         登录</a>
-                    <a href="{% url 'register' %}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-person-plus"></i></i>
+                    <a href="{% url 'register' %}" class="btn btn-sm btn-outline-secondary"><i
+                            class="bi bi-person-plus"></i></i>
                         注册</a>
                 {% endif %}
             </form>
