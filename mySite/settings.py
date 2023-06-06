@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+import re
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -119,7 +120,18 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-
 MEDIA_URL = "/media/"
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+WHITE_LIST = [
+	re.compile(r"^/login/?$"), # 匹配/login或/login/
+	re.compile(r"^/register/?$"), # 匹配/register或/register/
+	re.compile(r"^/logout/?$"), # 匹配/logout或/logout/
+	re.compile(r"^/?$"), # 匹配/或空字符串
+	re.compile(r"^/notice(/\d+)?/?$"), # 匹配/notice或/notice/或/notice/数字或/notice/数字/
+	re.compile(r"^/book/?$"), # 匹配/book或/book/
+	re.compile(r"^/alert/?$"), # 匹配/alert或/alert/
+	"favicon.ico", # 匹配favicon.ico
+	re.compile(r"^/media/.+$") # 匹配/media/后面跟着至少一个字符
+]

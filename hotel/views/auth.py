@@ -1,5 +1,7 @@
 import bcrypt
-from django.shortcuts import render, redirect
+from django.http import HttpResponseNotFound
+from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse_lazy
 from django.views import View
 
 from hotel.forms.forms import LoginForm
@@ -16,7 +18,8 @@ class Login(View):
 		if form.is_valid():
 			user = Account.objects.filter(account_user=form.cleaned_data["account_user"]).first()
 			if user:
-				if bcrypt.checkpw(form.cleaned_data["account_password"].encode("utf-8"), user.account_password.encode("utf-8")):
+				if bcrypt.checkpw(form.cleaned_data["account_password"].encode("utf-8"),
+				                  user.account_password.encode("utf-8")):
 					request.session["user"] = {'id': user.id, 'type': user.account_type, 'name': user.account_name}
 					return redirect("index")
 		form.add_error("account_password", "用户名或密码错误")
@@ -41,26 +44,38 @@ def logout(request):
 	request.session.flush()
 	return redirect("index")
 
+
 def alert(request):
 	code_explain = {
 		"401": "您当前未登录！请先登录后在进行操作！",
 		"403": "当前用户权限不足！请确认所登录的账户是否有权限访问该页面！",
-		"404": "您所访问的页面不存在！",
+
 	}
 	code_link = {
-		"401": "/login/",
+		"401": reverse_lazy("login"),
 	}
 	link_text = {
 		"401": "登录页",
 	}
 	code = request.GET.get("code")
+	next_url = request.GET.get("next")
+	context = {
+		"msg": "您访问的页面不存在！",
+		"link": reverse_lazy("index"),
+		"link_text": "首页",
+	}
+
 	if code in code_explain.keys():
-		msg = code_explain.get(code)
+		msg = get_object_or_404(code_explain, code)
 		if code in code_link.keys():
-			link = code_link.get(code)
-			text = link_text.get(code)
+			link = get_object_or_404(code_link, code)
+			text = get_object_or_404(link_text, code)
 		else:
-			link = "/"
+			link = reverse_lazy("index")
 			text = "首页"
-		return render(request, "alert.html", {"msg": msg, "link": link, "link_text": text})
-	return render(request, "alert.html", {"msg": code_explain["404"], "link": "/", "link_text": "首页"})
+		context["msg"] = msg
+		context["link"] = link + "?next=" + next_url
+		context["link_text"] = text
+	if code == "404":
+		return HttpResponseNotFound(render(request, "alert.html", context))
+	return render(request, "alert.html", context)
