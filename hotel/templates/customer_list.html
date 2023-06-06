@@ -53,7 +53,9 @@
                                 <th>id</th>
                                 <th>姓名</th>
                                 <th>身份证号</th>
-                                <th>创建人</th>
+                                {% if request.session.user.type == 1 %}
+                                    <th>创建人</th>
+                                {% endif %}
                                 <th>电话号码</th>
                                 <th>邮箱</th>
                                 {#                            <th>状态</th>#}
@@ -66,9 +68,11 @@
                                     <td>{{ obj.id }}</td>
                                     <td>{{ obj.customer_name }}</td>
                                     <td>{{ obj.customer_idNumber }}</td>
-                                    <td>
-                                        <a href="{% url 'account_list' %}?q={{ obj.customer_creator.id }}&m=si">{{ obj.customer_creator.account_user }}</a>
-                                    </td>
+                                    {% if request.session.user.type == 1 %}
+                                        <td>
+                                            <a href="{% url 'account_list' %}?q={{ obj.customer_creator.id }}&m=si">{{ obj.customer_creator.account_user }}</a>
+                                        </td>
+                                    {% endif %}
                                     <td>{{ obj.customer_phone }}</td>
                                     <td>{{ obj.customer_email }}</td>
                                     {#                                <td>{{ obj.get_customer_status_display }}</td>#}

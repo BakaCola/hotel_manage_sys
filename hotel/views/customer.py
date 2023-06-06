@@ -17,11 +17,11 @@ def customer_list(request):
 			"se": "customer_email__contains",
 		}
 		data_dict[method[search_method]] = search_data
-	if request.session.get("user")["type"] == 0:
+	if request.session.get("user")["type"] == 1:
+		total = Customer.objects.all().count()
+	else:
 		data_dict["customer_creator"] = request.session.get("user")["id"]
 		total = Customer.objects.filter(**data_dict).count()
-	else:
-		total = Customer.objects.all().count()
 	customer_data = Customer.objects.filter(**data_dict)
 	context = {
 		"customer_data": customer_data,
@@ -40,14 +40,14 @@ def customer_add(request):
 		"prv_info": ""
 	}
 	if request.method == "GET":
-		context["form"] = CustomerModelForm()
+		context["form"] = CustomerModelForm(initial={"customer_creator": request.session.get("user")["id"]})
 		return render(request, "info_edit.html", context)
 	context["form"] = CustomerModelForm(request.POST)
 	if context["form"].is_valid():
 		context["form"].save()
 		if request.POST.get("addMore") == "1":
 			context["form"] = CustomerModelForm()
-			context["prv_info"] = "住客 "+request.POST.get("customer_name")+" 已添加"
+			context["prv_info"] = "住客 " + request.POST.get("customer_name") + " 已添加"
 			return render(request, "info_edit.html", context)
 		return redirect("/customer/")
 	return render(request, "info_edit.html", context)

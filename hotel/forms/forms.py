@@ -139,6 +139,9 @@ class CustomerModelForm(BootStrapModelForm):
 	class Meta:
 		model = Customer
 		exclude = ['id', 'customer_status']
+		widgets = {
+			"customer_creator": forms.HiddenInput(),
+		}
 
 
 class NoticeModelForm(BootStrapModelForm):
@@ -183,7 +186,6 @@ class RoomModelForm(BootStrapModelForm):
 
 
 class RoomTypeModelForm(BootStrapModelForm):
-
 	# def save(self, commit=True):
 	# 	# 调用父类的save方法，获取模型实例，但不保存到数据库
 	# 	image = super().save(commit=False)
