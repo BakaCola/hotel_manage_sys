@@ -43,9 +43,10 @@
                             <label>验证码</label>
                             {{ form.captcha }}
                             <span style="color: red;">{{ form.errors.captcha.0 }}</span>
-                        <div class="row">
-                            <div class="col-auto">
-                                <button type="submit" class="btn btn-primary">登录</button>
+                            <div class="row">
+                                <div class="col-auto">
+                                    <button type="submit" class="btn btn-primary">登录</button>
+                                </div>
                             </div>
                         </div>
                     </form>
@@ -55,45 +56,14 @@
     </div>
 {% endblock %}
 
-{#{% block content %}#}
-{#    <div class="container login_box">#}
-{#        <div class="row justify-content-center">#}
-{#            <div class="col-auto">#}
-{#                <h1>登录</h1>#}
-{#            </div>#}
-{#        </div>#}
-{#        <div>#}
-{#            <form style="padding-top: 30px" method="post">#}
-{#                {% csrf_token %}#}
-{#                <div class="row justify-content-center">#}
-{#                    <div class="col col-lg-4">#}
-{#                        <label class="form-label">用户名</label>#}
-{#                        <div class="input-group flex-nowrap">#}
-{#                            <span class="input-group-text" id="addon-wrapping"><i#}
-{#                                    class="bi bi-person-circle"></i></span>#}
-{#                            <input type="email" class="form-control" id="exampleInputEmail1" placeholder="请输入用户名"#}
-{#                                   aria-label="Username" aria-describedby="emailHelp" name="user">#}
-{#                        </div>#}
-{#                    </div>#}
-{#                </div>#}
-{#                <div class="row justify-content-center">#}
-{#                    <div class="col col-lg-4">#}
-{#                        <label class="col-form-label">密码</label>#}
-{#                        <div class="input-group flex-nowrap">#}
-{#                            <span class="input-group-text" id="addon-wrapping"><i class="bi bi-key"></i></span>#}
-{#                            <input type="password" class="form-control" placeholder="请输入密码"#}
-{#                                   aria-label="Password"#}
-{#                                   aria-describedby="addon-wrapping" id="exampleInputPassword1" name="pwd">#}
-{#                        </div>#}
-{#                    </div>#}
-{#                </div>#}
-{#                <div class="row justify-content-md-center err_msg">#}
-{#                    {{ err_msg }}#}
-{#                </div>#}
-{#                <button type="submit" class="btn btn-primary">登录</button>#}
-{##}
-{#            </form>#}
-{##}
-{#        </div>#}
-{#    </div>#}
-{#{% endblock %}#}
+{% block js %}
+    <script>
+        $('.captcha').click(function () {
+            // console.log('click');
+            $.getJSON("/captcha/refresh/", function (result) {
+                $('.captcha').attr('src', result['image_url']);
+                $('#id_captcha_0').val(result['key'])
+            })
+        });
+    </script>
+{% endblock %}
