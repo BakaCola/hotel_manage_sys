@@ -68,14 +68,25 @@
                                     <td>{{ obj.get_order_status_display }}</td>
 
                                     <td>
-                                        <a class="btn btn-primary btn-sm"
-                                           href="{% url 'account_edit' obj.id %}">查看详细</a>
-                                        <button type="button" class="btn btn-danger btn-sm btn-delete"
-                                                uid="{{ obj.id }}">取消订单
-                                        </button>
+                                        <a class="btn btn-primary btn-sm" href="#">查看详细</a>
                                         {% if request.session.user.type == 1 %}
-                                            <a class="btn btn-success btn-sm" href="#">确认入住</a>
-                                            <a class="btn btn-warning btn-sm" href="#">确认退房</a>
+
+                                            <button type="button" class="btn btn-danger btn-sm btn-delete"
+                                                    uid="{{ obj.id }}"
+                                                    {% if obj.order_status >= 2 %}disabled{% endif %}>取消订单
+                                            </button>
+                                            {% if not obj.order_status == 0 %}
+                                                <a class="btn btn-success btn-sm disabled">确认入住</a>
+                                            {% else %}
+                                                <a class="btn btn-success btn-sm"
+                                                   href="{% url 'order_set_status' %}?id={{ obj.id }}&status=1">确认入住</a>
+                                            {% endif %}
+                                            {% if not obj.order_status == 1 %}
+                                                <a class="btn btn-warning btn-sm disabled">确认退房</a>
+                                            {% else %}
+                                                <a class="btn btn-warning btn-sm"
+                                                   href="{% url 'order_set_status' %}?id={{ obj.id }}&status=2">确认退房</a>
+                                            {% endif %}
                                         {% endif %}
 
                                     </td>
@@ -100,15 +111,15 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">删除用户？</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">取消订单？</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    确认删除用户嘛？
+                    确认取消订单嘛？
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                    <button type="button" id="btnConfirmDelete" class="btn btn-danger">确认删除</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消操作</button>
+                    <button type="button" id="btnConfirmDelete" class="btn btn-danger">确认取消订单</button>
                 </div>
             </div>
         </div>
@@ -130,8 +141,7 @@
             $(".btn-delete").click(function () {
                 $("#confrimDelModal").modal('show');
                 //获取当前行的ID
-                DELETE_ID = $(this).attr("uid");
-                console.log(DELETE_ID)
+                CANCEL_ID = $(this).attr("uid");
             });
         }
 
@@ -139,11 +149,12 @@
             $("#btnConfirmDelete").click(function () {
                 // 点击确认删除按钮,将全局变量中设置的那个要删除的ID发送到后台
                 $.ajax({
-                    url: "{% url 'account_del' %}",      // => /order/delete/?uid=123
+                    url: "{% url 'order_set_status' %}",      // => /order/delete/?uid=123
                     type: "GET",
                     dataType: "JSON",
                     data: {
-                        uid: DELETE_ID
+                        id: CANCEL_ID,
+                        status: 3
                     },
                     success: function (res) {
                         if (res.status) {

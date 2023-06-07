@@ -19,3 +19,13 @@ class OrderList(View):
 			"order_total": order_total
 		}
 		return render(request, "order_list.html", context)
+
+
+def orderSetStatus(request):
+	if request.method == "GET":
+		order_id = request.GET.get("id")
+		order_status = request.GET.get("status")
+		order_obj = Order.objects.filter(pk=order_id).first()
+		order_obj.order_status = order_status
+		order_obj.save()
+		return redirect("/order/")
