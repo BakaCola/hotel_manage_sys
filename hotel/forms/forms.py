@@ -1,6 +1,7 @@
 import os
 import uuid
 
+from captcha.fields import CaptchaField
 from django.core.exceptions import ValidationError
 from django import forms
 from django.core.validators import RegexValidator
@@ -90,7 +91,7 @@ class AccountAddModelForm(AccountModelForm):
 		# 检查两次密码是否一致
 		if account_password and confirm_password:
 			if account_password != confirm_password:
-				raise forms.ValidationError('两次密码输入不一致，请重新输入')
+				self.add_error('confirm_password', '两次密码不一致')
 		return cleaned_data
 
 	def clean_account_password(self):
@@ -111,10 +112,12 @@ class AccountAddModelForm(AccountModelForm):
 
 
 class AccountRegisterModelForm(AccountAddModelForm):
+	captcha = CaptchaField(label='验证码', error_messages={"invalid": "验证码错误"})
+
 	class Meta:
 		model = Account
 		fields = ['account_user', 'account_name', 'account_password', 'confirm_password', 'account_phone',
-		          'account_email']
+		          'account_email', ]
 
 
 class CustomerModelForm(BootStrapModelForm):
@@ -182,6 +185,8 @@ class LoginForm(BootStrapForm):
 		min_length=8,
 	)
 
+	captcha = CaptchaField(label='验证码')
+
 	class Meta:
 		fields = ['account_user', 'account_password']
 
@@ -193,19 +198,6 @@ class RoomModelForm(BootStrapModelForm):
 
 
 class RoomTypeModelForm(BootStrapModelForm):
-	# def save(self, commit=True):
-	# 	# 调用父类的save方法，获取模型实例，但不保存到数据库
-	# 	image = super().save(commit=False)
-	# 	# 获取图片文件对象
-	# 	file = image.roomType_img
-	# 	# 修改图片文件的name属性，使用uuid来生成随机字符串
-	# 	file.name = str(uuid.uuid4()) + os.path.splitext(file.name)[1]
-	# 	# 根据commit参数的值来决定是否保存到数据库
-	# 	if commit:
-	# 		image.save()
-	# 	# 返回模型实例
-	# 	return image
-
 	class Meta:
 		model = RoomType
 		fields = "__all__"

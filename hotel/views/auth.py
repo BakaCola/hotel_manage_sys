@@ -22,7 +22,10 @@ class Login(View):
 				                  user.account_password.encode("utf-8")):
 					request.session["user"] = {'id': user.id, 'type': user.account_type, 'name': user.account_name}
 					return redirect("index")
-		form.add_error("account_password", "用户名或密码错误")
+				else:
+					form.add_error("account_password", "用户名或密码错误")
+
+
 		return render(request, "login.html", {"form": form})
 
 

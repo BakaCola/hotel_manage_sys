@@ -21,5 +21,6 @@ from django.views.static import serve
 
 urlpatterns = [
 	re_path(r"^media/(?P<path>.*)$", serve, {"document_root": settings.MEDIA_ROOT}, name="media"),
+	path('captcha/', include('captcha.urls')),
 	path("", include("hotel.urls")),
 ]

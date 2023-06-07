@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 	"hotel.apps.HotelConfig",
 	"django_bootstrap5",
 	"bootstrap_datepicker_plus",
+	"captcha",
 ]
 
 MIDDLEWARE = [
@@ -124,14 +125,21 @@ MEDIA_URL = "/media/"
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.qq.com'  # 腾讯QQ邮箱 SMTP 服务器地址
+EMAIL_PORT = 25  # SMTP服务的端口号
+EMAIL_HOST_USER = '自己的qq邮箱'  # 发送邮件的QQ邮箱
+EMAIL_HOST_PASSWORD = '自己的授权码'  # 在QQ邮箱->设置->帐户->“POP3/IMAP......服务” 里得到的在第三方登录QQ邮箱授权码
+
 WHITE_LIST = [
-	re.compile(r"^/login/?$"), # 匹配/login或/login/
-	re.compile(r"^/register/?$"), # 匹配/register或/register/
-	re.compile(r"^/logout/?$"), # 匹配/logout或/logout/
-	re.compile(r"^/?$"), # 匹配/或空字符串
-	re.compile(r"^/notice(/\d+)?/?$"), # 匹配/notice或/notice/或/notice/数字或/notice/数字/
-	re.compile(r"^/book/?$"), # 匹配/book或/book/
-	re.compile(r"^/alert/?$"), # 匹配/alert或/alert/
-	"favicon.ico", # 匹配favicon.ico
-	re.compile(r"^/media/.+$") # 匹配/media/后面跟着至少一个字符
+	re.compile(r"^/login/?$"),  # 匹配/login或/login/
+	re.compile(r"^/register/?$"),  # 匹配/register或/register/
+	re.compile(r"^/logout/?$"),  # 匹配/logout或/logout/
+	re.compile(r"^/?$"),  # 匹配/或空字符串
+	re.compile(r"^/notice(/\d+)?/?$"),  # 匹配/notice或/notice/或/notice/数字或/notice/数字/
+	re.compile(r"^/book/?$"),  # 匹配/book或/book/
+	re.compile(r"^/alert/?$"),  # 匹配/alert或/alert/
+	"favicon.ico",  # 匹配favicon.ico
+	re.compile(r"^/media/.+$"),  # 匹配/media/后面跟着至少一个字符
+	re.compile(r"^/captcha/.+$"),  # 匹配/captcha/后面跟着至少一个字符
 ]

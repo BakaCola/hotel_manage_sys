@@ -8,24 +8,52 @@
 {% block css %}
     <style>
 
-
     </style>
 {% endblock %}
 
 {% block content %}
     <div class="container">
-    <div class="card">
-        <div class="card-header">
-            <h4>注册</h4>
+        <div class="card">
+            <div class="card-header">
+                <h4>注册</h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="row">
+                        {% for field in form %}
+                            {% if not field.label == '验证码' %}
+                                <div class="col-6">
+                                    {% bootstrap_field field %}
+                                </div>
+                            {% else %}
+                                <div class="col-6">
+                                    {% bootstrap_field field %}
+                                    <span style="color: red;">{{ field.errors }}</span>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+
+                    </div>
+
+
+                    <button type="submit" class="btn btn-primary">注册</button>
+                </form>
+            </div>
         </div>
-        <div class="card-body">
-            <form method="post">
-                {% csrf_token %}
-                {% bootstrap_form form %}
-                <button type="submit" class="btn btn-primary">注册</button>
-            </form>
-        </div>
-    </div>
     </div>
 
 {% endblock %}
+
+{% block js %}
+    <script>
+        $('.captcha').click(function () {
+            // console.log('click');
+            $.getJSON("/captcha/refresh/", function (result) {
+                $('.captcha').attr('src', result['image_url']);
+                $('#id_captcha_0').val(result['key'])
+            })
+        });
+    </script>
+{% endblock %}
+
