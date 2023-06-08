@@ -51,15 +51,16 @@ class BookCheck(View):
 	def get(self, request):
 		book = request.session.get("book")
 		room_type = RoomType.objects.filter(id=book["type_id"]).first()
+		day = (timezone.datetime.strptime(book["ed"], "%Y-%m-%d") - timezone.datetime.strptime(book["st"],
+		                                                                                       "%Y-%m-%d")).days
 		context = {
 			"room_type": room_type,
 			"st": book["st"],
 			"ed": book["ed"],
 			"num": str(book["num"]),
-			"price": int(book["num"]) * room_type.roomType_price,
+			"price": int(book["num"]) * room_type.roomType_price * day,
 			"customer_list": Customer.objects.filter(customer_creator_id=request.session.get("user")["id"]),
-			"day": (timezone.datetime.strptime(book["ed"], "%Y-%m-%d") - timezone.datetime.strptime(book["st"],
-			                                                                                        "%Y-%m-%d")).days
+			"day": day
 		}
 
 		return render(request, "book_check.html", context)
