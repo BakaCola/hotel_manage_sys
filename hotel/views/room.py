@@ -28,7 +28,7 @@ class RoomList(View):
 
 class RoomEdit(View):
 	context = {
-		"title": "修改账户信息",
+		"title": "修改客房信息",
 		"addmoreCtr": 0,
 		"prv_info": "",
 	}

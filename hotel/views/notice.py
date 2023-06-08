@@ -45,13 +45,13 @@ def notice_edit(request, pk):
 	if request.method == "GET":
 		notice_obj = Notice.objects.filter(pk=pk).first()
 		form = NoticeModelForm(instance=notice_obj)
-		return render(request, "info_edit.html", {"form": form})
+		return render(request, "info_edit.html", {"form": form, "title": "编辑公告"})
 	notice_obj = Notice.objects.filter(pk=pk).first()
 	form = NoticeModelForm(request.POST, instance=notice_obj)
 	if form.is_valid():
 		form.save()
 		return redirect("/notice/manage/")
-	return render(request, "info_edit.html", {"form": form})
+	return render(request, "info_edit.html", {"form": form, "title": "编辑公告"})
 
 
 class NoticeAdd(View):
@@ -62,7 +62,7 @@ class NoticeAdd(View):
 	}
 
 	def get(self, request):
-		self.context['form'] = NoticeModelForm()
+		self.context['form'] = NoticeModelForm(initial={"notice_publisher": request.session.get("user")["id"]})
 		return render(request, "info_edit.html", self.context)
 
 	def post(self, request):

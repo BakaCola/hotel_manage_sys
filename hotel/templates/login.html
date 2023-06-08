@@ -43,11 +43,14 @@
                             <label>验证码</label>
                             {{ form.captcha }}
                             <span style="color: red;">{{ form.errors.captcha.0 }}</span>
-                            <div class="row">
-                                <div class="col-auto">
-                                    <button type="submit" class="btn btn-primary">登录</button>
+                            <div class="mt-4">
+                                <button type="submit" class="btn btn-primary">登录</button>
+                                <div class="d-inline-block float-end">
+                                    <a href="{% url 'register' %}" class="btn btn-outline-success">注册</a>
+                                    <a href="{% url 'register' %}" class="btn btn-outline-secondary">找回密码</a>
                                 </div>
                             </div>
+
                         </div>
                     </form>
                 </div>

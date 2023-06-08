@@ -161,6 +161,7 @@ class NoticeModelForm(BootStrapModelForm):
 		widgets = {
 			"notice_time": forms.DateTimeInput(attrs={"type": "datetime-local", }),
 			"notice_expiration": forms.DateTimeInput(attrs={"type": "datetime-local"}),
+			"notice_publisher": forms.HiddenInput(),
 		}
 
 

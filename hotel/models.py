@@ -67,7 +67,7 @@ class OrderDetail(models.Model):
 
 
 class RoomType(models.Model):
-	roomType_name = models.CharField(verbose_name="客房类型", max_length=10)
+	roomType_name = models.CharField(verbose_name="房型名称", max_length=10)
 	roomType_max = models.SmallIntegerField(verbose_name="最大入住人数", default=2)
 	roomType_price = models.DecimalField(verbose_name="客房价格", max_digits=8, decimal_places=2)
 	roomType_description = models.TextField(verbose_name="客房描述")

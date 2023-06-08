@@ -61,13 +61,13 @@ def customer_edit(request, pk):
 	if request.method == "GET":
 		customer_obj = Customer.objects.filter(pk=pk).first()
 		form = CustomerModelForm(instance=customer_obj)
-		return render(request, "info_edit.html", {"form": form})
+		return render(request, "info_edit.html", {"form": form, "title": "修改住客信息"})
 	customer_obj = Customer.objects.filter(pk=pk).first()
 	form = CustomerModelForm(request.POST, instance=customer_obj)
 	if form.is_valid():
 		form.save()
 		return redirect("/customer/")
-	return render(request, "info_edit.html", {"form": form})
+	return render(request, "info_edit.html", {"form": form, "title": "修改住客信息"})
 
 
 def customer_del(request, pk):
