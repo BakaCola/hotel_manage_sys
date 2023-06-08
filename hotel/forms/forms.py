@@ -4,7 +4,7 @@ import uuid
 from captcha.fields import CaptchaField
 from django.core.exceptions import ValidationError
 from django import forms
-from django.core.validators import RegexValidator
+from django.core.validators import RegexValidator, MinValueValidator
 
 # from bootstrap_datepicker_plus.widgets import DateTimePickerInput
 import bcrypt
@@ -198,6 +198,9 @@ class RoomModelForm(BootStrapModelForm):
 
 
 class RoomTypeModelForm(BootStrapModelForm):
+	roomType_price = forms.DecimalField(validators=[MinValueValidator(0)], label="客房价格", max_digits=8,
+	                                    decimal_places=2)
+	roomType_max = forms.IntegerField(validators=[MinValueValidator(0)], label="最大入住人数")
 
 	class Meta:
 		model = RoomType
@@ -208,4 +211,3 @@ class OrderModelForm(BootStrapModelForm):
 	class Meta:
 		model = Order
 		exclude = ["order_idNumber", "order_creator", "order_time", "order_status"]
-
