@@ -23,7 +23,7 @@ class Customer(models.Model):
 	customer_name = models.CharField(verbose_name="姓名", max_length=10)
 	customer_phone = models.CharField(verbose_name="电话号码", max_length=11)
 	customer_email = models.EmailField(verbose_name="邮箱")
-	customer_status = models.SmallIntegerField(verbose_name="状态", choices=((0, "正常"), (1, "已封禁")), default=0)
+	# customer_status = models.SmallIntegerField(verbose_name="状态", choices=((0, "正常"), (1, "已封禁")), default=0)
 
 
 class Order(models.Model):
@@ -45,7 +45,7 @@ class Account(models.Model):
 	account_email = models.EmailField(verbose_name="邮箱", unique=True)
 	account_password = models.CharField(verbose_name="密码", max_length=255)
 	account_type = models.SmallIntegerField(verbose_name="账户类型", choices=((0, "顾客"), (1, "管理员")), default=0)
-	account_status = models.SmallIntegerField(verbose_name="账户状态", choices=((0, "正常"), (1, "已封禁")), default=0)
+	# account_status = models.SmallIntegerField(verbose_name="账户状态", choices=((0, "正常"), (1, "已封禁")), default=0)
 
 	def __str__(self):
 		return self.account_user
@@ -68,6 +68,7 @@ class OrderDetail(models.Model):
 
 class RoomType(models.Model):
 	roomType_name = models.CharField(verbose_name="客房类型", max_length=10)
+	roomType_max = models.SmallIntegerField(verbose_name="最大入住人数", default=2)
 	roomType_price = models.DecimalField(verbose_name="客房价格", max_digits=8, decimal_places=2)
 	roomType_description = models.TextField(verbose_name="客房描述")
 	roomType_img = models.ImageField(verbose_name="客房图片", upload_to="rooms_img/")
@@ -77,4 +78,3 @@ class RoomType(models.Model):
 
 	def get_absolute_url(self):
 		return reverse("hotel:room_detail", kwargs={"pk": self.pk})
-

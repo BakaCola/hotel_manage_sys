@@ -36,7 +36,7 @@ def customer_add(request):
 	context = {
 		"form": None,
 		"title": "添加住客信息",
-		"addmoreCtr": 1,
+		"addMoreCtr": 1,
 		"prv_info": ""
 	}
 	if request.method == "GET":
