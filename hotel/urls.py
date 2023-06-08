@@ -1,10 +1,18 @@
 from django.urls import path
-from .views import index, auth, account, customer, notice, room, book
+from .views import index, auth, account, customer, notice, room, book, order
+from .views import test
 
 urlpatterns = [
 	path("", index.index, name="index"),
 
+	path("test/", test.test),
+
 	path("book/", book.BookList.as_view(), name="book_list"),
+	path("book/detail/", book.book_detail, name="book_detail"),
+	path("book/check/", book.BookCheck.as_view(), name="book_check"),
+
+	path("order/", order.OrderList.as_view(), name="order_list"),
+	path("order/setStatus/", order.orderSetStatus, name="order_set_status"),
 
 	path("room/", room.RoomList.as_view(), name="room_list"),
 	path("room/add/", room.RoomAdd.as_view(), name="room_add"),

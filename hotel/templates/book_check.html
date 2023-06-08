@@ -1,2 +1,271 @@
 {% extends 'layout.html' %}
-<div class="h1">订单确认</div>
+{% block head %}
+    <title>新建订单—Neko酒店</title>
+{% endblock %}
+
+{% block css %}
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h3>新建订单</h3>
+            </div>
+            <div class="card-body">
+                <span class="h4">Neko酒店</span>
+                <small><i class="bi bi-geo-alt-fill"></i> 中国·上海市·松江区·上海工程技术大学</small>
+                <span class="h5 float-end"><small>订单详细</small></span>
+                <div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <img src="{{ room_type.roomType_img.url }}" style="width: 100%;">
+                        </div>
+                        <div class="col-8">
+                            <form method="post" id="form">
+                                {% csrf_token %}
+                                <div class="mt-2">
+                                    <span class="h4 me-5">{{ room_type.roomType_name }}</span>
+                                    <span class="h5 text-danger">{{ room_type.roomType_price }}￥/天</span>
+                                    <hr>
+                                    <span class="me-3">入住日期：<span class="text-bg-warning">{{ st }}</span></span>
+                                    <span class="me-3">退房日期：<span class="text-bg-warning">{{ ed }}</span></span>
+                                    <span class="me-3">入住天数：<span
+                                            class="text-bg-warning">共{{ day }}天</span></span>
+                                    <span class="me-3"><span class="text-bg-warning">共{{ num }}间</span></span>
+                                    <hr>
+                                    <p class="mt-2"
+                                       style="white-space: pre-line">{{ room_type.roomType_description }}</p>
+                                    <hr>
+                                </div>
+                                <div class="h4">选择住客:</div>
+                                {% if customer_list %}
+                                    {% with ''|center:num as range %}
+                                        {% for _ in range %}
+                                            <div>
+                                                <span class="h5">房间{{ forloop.counter }}：</span>
+                                                <span id="error_group_{{ forloop.counter }}" class="text-danger"></span>
+                                            </div>
+
+                                            {% for obj in customer_list %}
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="checkbox" value="{{ obj.id }}"
+                                                           id="r_{{ forloop.parentloop.counter }}_{{ obj.id }}"
+                                                           data-group="{{ forloop.parentloop.counter }}"
+                                                           data-sig="{{ obj.id }}">
+                                                    <label class="form-check-label"
+                                                           for="r_{{ forloop.parentloop.counter }}_{{ obj.id }}">
+                                                        {{ obj.customer_name }}
+                                                    </label>
+                                                </div>
+                                            {% endfor %}
+                                            <hr>
+                                        {% endfor %}
+                                    {% endwith %}
+                                    <div class="h4">支付方式</div>
+                                    <span class="h5">请在前台支付：共<span
+                                            class="text-danger h5">{{ room_type.roomType_price }} x {{ num }} = <strong
+                                            style="font-size: larger">{{ price }}元</strong></span></span>
+                                    <button type="submit" class="btn btn-primary btn-lg d-inline-block mt-3 float-end">
+                                        提交订单
+                                    </button>
+                                {% else %}
+                                    <div class="text-danger">
+                                        尚未添加住客，请添加住客后再进行预定
+                                        <a href="{% url 'customer_add' %}">点我添加住客</a>
+                                    </div>
+                                {% endif %}
+
+
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block js %}
+    <script>
+
+        // 定义一个函数，用来检查每组复选框是否超过最大选择数量
+        function checkMax(group) {
+            // 获取最大选择数量
+            var max = {{ room_type.roomType_max }};
+            // 获取当前分组的所有复选框
+            var checkboxes = document.querySelectorAll("input[data-group='" + group + "']");
+            // 统计当前分组已经选择的数量
+            var checked = 0;
+            for (var i = 0; i < checkboxes.length; i++) {
+                if (checkboxes[i].checked) {
+                    checked++;
+                }
+            }
+            // 如果超过最大选择数量，就禁用其他未选中的复选框
+            if (checked >= max) {
+                for (var i = 0; i < checkboxes.length; i++) {
+                    if (!checkboxes[i].checked) {
+                        checkboxes[i].disabled = true;
+                    }
+                }
+            } else {
+                // 否则，就启用所有复选框
+                for (var i = 0; i < checkboxes.length; i++) {
+                    // 先检查当前复选框是否已经被同sig的禁用了
+                    var sig = checkboxes[i].dataset.sig;
+                    var value = checkboxes[i].value;
+                    var disabledBySig = false;
+                    // 遍历所有房间的复选框
+                    var allCheckboxes = document.querySelectorAll("input[type='checkbox']");
+                    for (var j = 0; j < allCheckboxes.length; j++) {
+                        // 如果当前房间的复选框和同sig的复选框不是同一个，并且值相同，并且被选中
+                        if (allCheckboxes[j] !== checkboxes[i] && allCheckboxes[j].dataset.sig === sig && allCheckboxes[j].value === value && allCheckboxes[j].checked) {
+                            // 就说明当前复选框已经被同sig的禁用了
+                            disabledBySig = true;
+                            break;
+                        }
+                    }
+                    // 如果当前复选框没有被同sig的禁用，就可以启用它
+                    if (!disabledBySig) {
+                        checkboxes[i].disabled = false;
+                    }
+                }
+            }
+        }
+
+
+        // 定义一个函数，用来检查不同房间内是否有相同的旅客
+        function checkSig(sig) {
+            // 获取当前点击的复选框的值
+            var value = sig.value;
+            // 获取所有房间的复选框
+            var checkboxes = document.querySelectorAll("input[type='checkbox']");
+            // 遍历所有房间的复选框
+            for (var i = 0; i < checkboxes.length; i++) {
+                // 如果当前房间的复选框和点击的复选框不是同一个，并且值相同
+                if (checkboxes[i] !== sig && checkboxes[i].value === value) {
+                    // 如果点击的复选框被选中，就禁用当前房间的复选框
+                    if (sig.checked) {
+                        checkboxes[i].disabled = true;
+                    } else {
+                        // 否则，就启用当前房间的复选框
+                        checkboxes[i].disabled = false;
+                    }
+                }
+            }
+        }
+
+        // 定义一个函数，用来处理复选框的点击事件
+        function handleClick(event) {
+            // 获取当前点击的复选框的分组
+            var group = event.target.dataset.group;
+            // 检查不同房间内是否有相同的旅客
+            checkSig(event.target);
+            // 检查当前分组是否超过最大选择数量
+            checkMax(group);
+        }
+
+
+        // 给所有的复选框添加点击事件监听器
+        var checkboxes = document.querySelectorAll("input[type='checkbox']");
+        for (var i = 0; i < checkboxes.length; i++) {
+            checkboxes[i].addEventListener("click", handleClick);
+        }
+
+
+        // 定义一个函数，用来检查每一组是否至少选择了一个住客
+        function checkMin() {
+            // 获取所有的分组
+            var groups = document.querySelectorAll("input[type='checkbox'][data-group]");
+            // 创建一个空数组，用来存储分组的名称
+            var groupNames = [];
+            // 遍历所有的分组
+            for (var i = 0; i < groups.length; i++) {
+                // 获取当前分组的名称
+                var groupName = groups[i].dataset.group;
+                // 如果数组中没有这个名称，就添加进去
+                if (groupNames.indexOf(groupName) === -1) {
+                    groupNames.push(groupName);
+                }
+            }
+            // 创建一个变量，用来标记是否有未选择的分组
+            var hasEmptyGroup = false;
+            // 遍历所有的分组名称
+            for (var i = 0; i < groupNames.length; i++) {
+                // 获取当前分组名称对应的所有复选框
+                var checkboxes = document.querySelectorAll("input[data-group='" + groupNames[i] + "']");
+                // 统计当前分组已经选择的数量
+                var checked = 0;
+                for (var j = 0; j < checkboxes.length; j++) {
+                    if (checkboxes[j].checked) {
+                        checked++;
+                    }
+                }
+                // 如果当前分组没有选择任何复选框，就把标记变量设为true，并给出提示信息
+                if (checked === 0) {
+                    hasEmptyGroup = true;
+                    // 在页面上找到对应的提示元素，比如<span id="error_group_1"></span>
+                    var errorElement = document.getElementById("error_group_" + groupNames[i]);
+                    // 修改提示元素的内容和样式，比如显示红色的文字
+                    errorElement.textContent = "请至少选择一个房间" + groupNames[i] + "的住客";
+                    errorElement.style.color = "red";
+                    // 可以在这里添加其他逻辑，比如把对应的复选框边框变红等
+                } else {
+                    // 如果当前分组选择了至少一个复选框，就清除提示信息和样式
+                    var errorElement = document.getElementById("error_group_" + groupNames[i]);
+                    errorElement.textContent = "";
+                    errorElement.style.color = "";
+                    // 可以在这里添加其他逻辑，比如把对应的复选框边框恢复正常等
+                }
+            }
+            // 返回标记变量的值，如果为true，表示有未选择的分组，如果为false，表示没有未选择的分组
+            return hasEmptyGroup;
+        }
+
+        // 定义一个函数，用来检查表单是否有效
+        function checkValid() {
+            // 创建一个变量，用来标记表单是否有效
+            var isValid = true;
+            // 检查每一组是否至少选择了一个住客
+            var hasEmptyGroup = checkMin();
+            // 如果有未选择的分组，就把表单标记为无效
+            if (hasEmptyGroup) {
+                isValid = false;
+            }
+            // 检查其他表单元素是否符合要求，比如是否为空，是否符合格式等
+            // 这里可以根据你自己的需求添加逻辑，比如检查姓名、邮箱、电话等字段
+            // 如果有任何不符合要求的地方，就把表单标记为无效，并给出相应的提示信息和样式
+
+
+            // 返回表单是否有效的值，如果为true，表示表单有效，如果为false，表示表单无效
+            return isValid;
+        }
+
+        // 定义一个函数，用来处理表单的提交事件
+        function handleSubmit(event) {
+            console.log("表单提交了")
+            // 检查表单是否有效
+            var isValid = checkValid();
+            // 如果表单无效，就阻止表单的提交
+            if (!isValid) {
+                event.preventDefault();
+            }
+            // 如果表单有效，就可以继续提交或者做其他操作
+        }
+
+        $(function () {
+            // 页面框架加载完成之后代码自动执行
+            // 给表单添加提交事件监听器
+            var form = document.getElementById("form");
+            form.addEventListener("submit", handleSubmit);
+        })
+
+
+    </script>
+
+{% endblock %}
+

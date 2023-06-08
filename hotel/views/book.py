@@ -2,8 +2,9 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.views import View
+from django.views.decorators.csrf import csrf_exempt
 
-from hotel.models import Room, RoomType, OrderDetail
+from hotel.models import Room, RoomType, OrderDetail, Customer, Order
 
 
 def get_available(start, end, room_type_id):
@@ -48,13 +49,40 @@ class BookList(View):
 
 class BookCheck(View):
 	def get(self, request):
-		room_type = RoomType.objects.all()
-		return render(request, "book_check.html", {"room_type": room_type})
-		pass
+		book = request.session.get("book")
+		room_type = RoomType.objects.filter(id=book["type_id"]).first()
+		context = {
+			"room_type": room_type,
+			"st": book["st"],
+			"ed": book["ed"],
+			"num": str(book["num"]),
+			"price": int(book["num"]) * room_type.roomType_price,
+			"customer_list": Customer.objects.filter(customer_creator_id=request.session.get("user")["id"]),
+			"day": (timezone.datetime.strptime(book["ed"], "%Y-%m-%d") - timezone.datetime.strptime(book["st"],
+			                                                                                        "%Y-%m-%d")).days
+		}
+
+		return render(request, "book_check.html", context)
 
 
-class BookDetail(View):
-	def get(self, request):
-		room_type = RoomType.objects.all()
-		return render(request, "book_detail.html", {"room_type": room_type})
-		pass
+@csrf_exempt
+def book_detail(request):
+	# 获取post请求中的数据
+	type_id = request.POST.get("type_id")
+	st = request.POST.get("st")
+	ed = request.POST.get("ed")
+	num = request.POST.get("num")
+	# 把数据保存到session中
+	# request.session["room_id"] = room_id
+	# request.session["check_in"] = check_in
+	# request.session["check_out"] = check_out
+	# request.session["rooms"] = rooms
+
+	request.session["book"] = {
+		"type_id": type_id,
+		"st": st,
+		"ed": ed,
+		"num": num
+	}
+	# 返回一个json响应，指向订单详细页的url
+	return JsonResponse(request.session["book"])
