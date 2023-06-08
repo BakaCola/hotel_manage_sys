@@ -1,3 +1,4 @@
+from django.db import transaction
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.utils import timezone
@@ -64,6 +65,34 @@ class BookCheck(View):
 		}
 
 		return render(request, "book_check.html", context)
+
+	@transaction.atomic
+	def post(self, request):
+		# print(request.POST)
+		book = request.session.get("book")
+		st = book["st"]
+		ed = book["ed"]
+		room_type = RoomType.objects.filter(id=book["type_id"]).first()
+		room = get_available(st, ed, room_type.id)
+		if len(room) < int(book["num"]):
+			return render(request, "book_check.html", {"code": "1001", "msg": "房间数量不足"})
+		now = timezone.datetime.now()
+		order_id = now.strftime("%Y%m%d%H%M%S%f")
+		price = int(book["num"]) * room_type.roomType_price * (
+				timezone.datetime.strptime(ed, "%Y-%m-%d") - timezone.datetime.strptime(st, "%Y-%m-%d")).days
+		order = Order.objects.create(order_idNumber=order_id, order_time=now, order_check_in=st,
+		                             order_check_out=ed,
+		                             order_status=0, order_price=price,
+		                             order_creator_id=request.session.get("user")["id"])
+		# print(order_id, now, st, ed, 0, price, request.session.get("user")["id"])
+		for i in range(1, int(book["num"]) + 1):
+			getStr = "room_" + str(i)
+			customer_list = request.POST.getlist(getStr)
+			for customer_id in customer_list:
+				# print(customer_id, order_id, room[i - 1].id)
+				OrderDetail.objects.create(customer_id=customer_id, order=order, room=room[i - 1])
+
+		return redirect("/order/")
 
 
 @csrf_exempt

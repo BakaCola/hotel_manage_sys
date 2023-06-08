@@ -53,7 +53,8 @@
                                                     <input class="form-check-input" type="checkbox" value="{{ obj.id }}"
                                                            id="r_{{ forloop.parentloop.counter }}_{{ obj.id }}"
                                                            data-group="{{ forloop.parentloop.counter }}"
-                                                           data-sig="{{ obj.id }}">
+                                                           data-sig="{{ obj.id }}"
+                                                           name="room_{{ forloop.parentloop.counter }}">
                                                     <label class="form-check-label"
                                                            for="r_{{ forloop.parentloop.counter }}_{{ obj.id }}">
                                                         {{ obj.customer_name }}
