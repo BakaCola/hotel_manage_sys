@@ -185,7 +185,7 @@ class LoginForm(BootStrapForm):
 		min_length=8,
 	)
 
-	captcha = CaptchaField(label='验证码')
+	captcha = CaptchaField(label='验证码', error_messages={"invalid": "验证码错误"})
 
 	class Meta:
 		fields = ['account_user', 'account_password']
