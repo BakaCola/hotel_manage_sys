@@ -12,6 +12,7 @@ urlpatterns = [
 	path("book/check/", book.BookCheck.as_view(), name="book_check"),
 
 	path("order/", order.OrderList.as_view(), name="order_list"),
+	path("order/<int:pk>/detail/", order.OrderDetailView.as_view(), name="order_detail"),
 	path("order/setStatus/", order.orderSetStatus, name="order_set_status"),
 
 	path("room/", room.RoomList.as_view(), name="room_list"),

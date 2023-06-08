@@ -16,32 +16,6 @@
             </div>
             <div class="card-body">
                 <div>
-                    <div class="row justify-content-around">
-                        <div class="col-lg-5">
-                            <form method="get">
-                                <div class="input-group flex-nowrap">
-                                    <span class="input-group-text"><i class="bi bi-search"></i></span>
-                                    <input type="text" class="form-control" style="width: 10rem" name="q"
-                                           placeholder="请输入待搜索字段" value="{{ search_data }}">
-                                    <select class="form-select" style="width: 5rem" name="m">
-                                        <option value="su">用户名</option>
-                                        <option value="sp" {% if search_method == "sp" %}selected{% endif %}>电话号码
-                                        </option>
-                                        <option value="se" {% if search_method == "se" %}selected{% endif %}>邮箱
-                                        </option>
-                                    </select>
-                                    <div class="btn-group" role="group">
-                                        <button type="submit" class="btn btn-outline-primary">查询</button>
-                                        {% if search_data %}
-                                            <a class="btn btn-outline-danger"
-                                               href="{% url 'account_list' %}">取消搜索</a>
-                                        {% endif %}
-                                    </div>
-                                </div>
-
-                            </form>
-                        </div>
-                    </div>
                     <div class="table-responsive">
                         <table class="table table-hover table-striped" style="margin-top: 20px;">
                             <thead>
@@ -68,7 +42,8 @@
                                     <td>{{ obj.get_order_status_display }}</td>
 
                                     <td>
-                                        <a class="btn btn-primary btn-sm" href="#">查看</a>
+                                        <a class="btn btn-primary btn-sm"
+                                           href="{% url 'order_detail' obj.id %}">查看</a>
                                         {% if request.session.user.type == 1 %}
 
                                             <button type="button" class="btn btn-danger btn-sm btn-delete"
