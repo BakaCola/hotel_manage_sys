@@ -24,16 +24,14 @@ class BookList(View):
 		room_count = []
 		today = timezone.now().strftime("%Y-%m-%d")
 		tomorrow = (timezone.now() + timezone.timedelta(days=1)).strftime("%Y-%m-%d")
-		st = request.GET.get("st", today)
-		ed = request.GET.get("ed", tomorrow)
+		error = request.GET.get("error", "")
 		for room_type in roomType_data:
-			room_count.append(get_available(st, ed, room_type.id).count())
+			room_count.append(get_available(today, tomorrow, room_type.id).count())
 		context = {
 			"roomType_data": zip(roomType_data, room_count),
-			"st": st,
-			"ed": ed,
 			"today": today,
-			"tomorrow": tomorrow
+			"tomorrow": tomorrow,
+			"error": error
 		}
 		return render(request, "book_list.html", context)
 
@@ -72,14 +70,15 @@ class BookCheck(View):
 		book = request.session.get("book")
 		st = book["st"]
 		ed = book["ed"]
+		num = int(book["num"])
+		day = (timezone.datetime.strptime(ed, "%Y-%m-%d") - timezone.datetime.strptime(st, "%Y-%m-%d")).days
 		room_type = RoomType.objects.filter(id=book["type_id"]).first()
 		room = get_available(st, ed, room_type.id)
-		if len(room) < int(book["num"]):
-			return render(request, "book_check.html", {"code": "1001", "msg": "房间数量不足"})
+		if len(room) < num:
+			return redirect("/book/?st=" + st + "&ed=" + ed + "&num=" + str(num) + "&error=3")
 		now = timezone.datetime.now()
 		order_id = now.strftime("%Y%m%d%H%M%S%f")
-		price = int(book["num"]) * room_type.roomType_price * (
-				timezone.datetime.strptime(ed, "%Y-%m-%d") - timezone.datetime.strptime(st, "%Y-%m-%d")).days
+		price = int(book["num"]) * room_type.roomType_price * day
 		order = Order.objects.create(order_idNumber=order_id, order_time=now, order_check_in=st,
 		                             order_check_out=ed,
 		                             order_status=0, order_price=price,
@@ -101,12 +100,13 @@ def book_detail(request):
 	type_id = request.POST.get("type_id")
 	st = request.POST.get("st")
 	ed = request.POST.get("ed")
-	num = request.POST.get("num")
-	# 把数据保存到session中
-	# request.session["room_id"] = room_id
-	# request.session["check_in"] = check_in
-	# request.session["check_out"] = check_out
-	# request.session["rooms"] = rooms
+	num = int(request.POST.get("num"))
+	if num > 5 or num < 1:
+		return JsonResponse({"error": "1"})
+	if st < timezone.now().strftime("%Y-%m-%d") or ed < st:
+		return JsonResponse({"error": "2"})
+	if num > get_available(st, ed, type_id).count():
+		return JsonResponse({"error": "3"})
 
 	request.session["book"] = {
 		"type_id": type_id,
@@ -115,4 +115,4 @@ def book_detail(request):
 		"num": num
 	}
 	# 返回一个json响应，指向订单详细页的url
-	return JsonResponse(request.session["book"])
+	return JsonResponse({"url": "/book/check/"})
