@@ -55,8 +55,8 @@
                                 <div class="text-danger pt-4" style="font-size: 2rem">{{ room.roomType_price }}￥</div>
                                 <div>仅剩：<span id="room-{{ room.id }}">{{ room_count }}</span>间！</div>
 
-                                <button class="btn btn-primary mt-3 btnCheck"
-                                        data-type-id="{{ room.id }}">
+                                <button class="btn btn-primary mt-3 btnCheck" data-type-id="{{ room.id }} "
+                                        id="book_{{ room.id }}">
                                     立即预定
                                 </button>
                             </div>
@@ -132,6 +132,13 @@
                             roomCountElement.textContent = roomCount.toString();
                             var queryMsgElement = document.getElementById("query_msg");
                             var loading_element = document.getElementById("loading");
+                            var num = document.getElementById("num").value;
+                            var bookBtn = document.getElementById("book_" + roomId);
+                            if (roomCount < num) {
+                                bookBtn.disabled = true;
+                            } else {
+                                bookBtn.disabled = false;
+                            }
                             loading_element.style.display = "none";
                             queryMsgElement.textContent = "查询成功！";
                         }
