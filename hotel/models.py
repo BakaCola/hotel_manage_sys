@@ -10,7 +10,7 @@ class Room(models.Model):
 	room_number = models.CharField(verbose_name="客房号", max_length=10, unique=True)
 	room_type = models.ForeignKey(verbose_name="客房类型", to="RoomType", on_delete=models.SET_NULL, null=True,
 	                              blank=True)
-	room_status = models.SmallIntegerField(verbose_name="客房状态", choices=((0, "空闲"), (1, "已预订"), (2, "已入住")),
+	room_status = models.SmallIntegerField(verbose_name="客房状态", choices=((0, "空闲"), (1, "已入住")),
 	                                       default=0)
 
 	def __str__(self):
@@ -27,7 +27,7 @@ class Customer(models.Model):
 
 
 class Order(models.Model):
-	order_idNumber = models.CharField(verbose_name="订单号", max_length=18)
+	order_idNumber = models.CharField(verbose_name="订单号", max_length=24)
 	order_creator = models.ForeignKey(verbose_name="订单创建人", to="Account", on_delete=models.CASCADE)
 	order_time = models.DateTimeField(verbose_name="下单时间", auto_now_add=True)
 	order_check_in = models.DateField(verbose_name="住房起始日期")

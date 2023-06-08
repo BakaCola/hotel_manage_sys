@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views import View
 
-from hotel.models import Order
+from hotel.models import Order, OrderDetail, Room
 
 
 class OrderList(View):
@@ -28,4 +28,13 @@ def orderSetStatus(request):
 		order_obj = Order.objects.filter(pk=order_id).first()
 		order_obj.order_status = order_status
 		order_obj.save()
+		od = OrderDetail.objects.filter(order_id=order_id).first()
+		room = Room.objects.filter(pk=od.room_id).first()
+		if order_status == "1":
+			room.room_status = "1"
+			room.save()
+		elif order_status == "2":
+			room.room_status = "0"
+			room.save()
+
 		return redirect("/order/")
