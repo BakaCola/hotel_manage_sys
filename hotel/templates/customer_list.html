@@ -29,9 +29,9 @@
                                         <option value="sn">姓名</option>
                                         <option value="si" {% if search_method == "si" %}selected{% endif %}>身份证号
                                         </option>
-{#                                        <option value="sc" {% if search_method == "sc" %}selected{% endif %}>#}
-{#                                            ***创建人***#}
-{#                                        </option>#}
+                                        {#                                        <option value="sc" {% if search_method == "sc" %}selected{% endif %}>#}
+                                        {#                                            ***创建人***#}
+                                        {#                                        </option>#}
                                         <option value="sp" {% if search_method == "sp" %}selected{% endif %}>电话号码
                                         </option>
                                         <option value="se" {% if search_method == "se" %}selected{% endif %}>邮箱
@@ -85,6 +85,11 @@
                             {% endfor %}
                             </tbody>
                         </table>
+                        {% if customer_data %}
+                            <ul class="pagination">
+                                {{ page_string }}
+                            </ul>
+                        {% endif %}
                         <hr>
                         <div class="text-center">
                             {% if search_data %}

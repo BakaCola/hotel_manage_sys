@@ -3,6 +3,7 @@ from django.http import JsonResponse
 
 from hotel.forms.forms import AccountModelForm, AccountAddModelForm
 from hotel.models import Account
+from hotel.utils.pagination import Pagination
 
 
 def account_list(request):
@@ -18,8 +19,11 @@ def account_list(request):
 		}
 		data_dict[method[search_method]] = search_data
 	account_data = Account.objects.filter(**data_dict)
+	page_object = Pagination(request, account_data, page_size=10)
+	page_object.html()
 	context = {
-		"account_data": account_data,
+		"account_data": page_object.page_queryset,
+		"page_string": page_object.page_string,
 		"search_data": search_data,
 		"search_method": search_method,
 		"account_total": Account.objects.all().count(),

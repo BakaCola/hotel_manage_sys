@@ -4,15 +4,22 @@ from django.views import View
 
 from hotel.forms.forms import RoomModelForm, RoomTypeModelForm
 from hotel.models import Room, RoomType
+from hotel.utils.pagination import Pagination
 
 
 class RoomList(View):
 	def get(self, request):
 		room_data = Room.objects.all()
 		room_type_data = RoomType.objects.all()
+		page_object_room = Pagination(request, room_data, page_size=10)
+		page_object_roomType = Pagination(request, room_type_data, page_size=10, page_param="tPage")
+		page_object_room.html()
+		page_object_roomType.html()
 		context = {
-			"room_data": room_data,
-			"room_type_data": room_type_data,
+			"room_data": page_object_room.page_queryset,
+			"room_type_data": page_object_roomType.page_queryset,
+			"page_string_room": page_object_room.page_string,
+			"page_string_roomType": page_object_roomType.page_string,
 			"room_total": room_data.count(),
 			"room_type_total": room_type_data.count(),
 		}

@@ -29,8 +29,8 @@
                                         <option value="st">标题</option>
                                         <option value="sc" {% if search_method == "sc" %}selected{% endif %}>内容
                                         </option>
-{#                                        <option value="sp" {% if search_method == "sp" %}selected{% endif %}>创建人#}
-{#                                        </option>#}
+                                        {#                                        <option value="sp" {% if search_method == "sp" %}selected{% endif %}>创建人#}
+                                        {#                                        </option>#}
                                     </select>
                                     <button type="submit" class="btn btn-outline-primary">查询</button>
                                     {% if search_data %}
@@ -65,7 +65,7 @@
                                     </td>
                                     <td>{{ obj.notice_time }}</td>
                                     <td>{{ obj.notice_expiration }}</td>
-                                    <td class="d-inline-flex">
+                                    <td>
                                         <a class="btn btn-primary btn-sm"
                                            href="{% url 'notice_edit' obj.id %}">编辑</a>
                                         <a class="btn btn-danger btn-sm"
@@ -75,6 +75,11 @@
                             {% endfor %}
                             </tbody>
                         </table>
+                        {% if notice %}
+                            <ul class="pagination">
+                                {{ page_string }}
+                            </ul>
+                        {% endif %}
                         <hr>
                         <div class="text-center">
                             {% if search_data %}

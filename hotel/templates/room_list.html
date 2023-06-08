@@ -31,7 +31,7 @@
                                     <th>客房号</th>
                                     <th>客房类型</th>
                                     <th>客房状态</th>
-{#                                    <th>生效订单</th>#}
+                                    {#                                    <th>生效订单</th>#}
                                     <th>操作</th>
                                 </tr>
                                 </thead>
@@ -42,8 +42,8 @@
                                         <td>{% if room.room_type %}{{ room.room_type.roomType_name }}{% else %}
                                             未设置房型{% endif %}</td>
                                         <td>{{ room.get_room_status_display }}</td>
-{#                                        <td>{% if room.order_set.first.order_status < 2 %}#}
-{#                                            {{ room.order_set.first.order_number }}{% endif %}</td>#}
+                                        {#                                        <td>{% if room.order_set.first.order_status < 2 %}#}
+                                        {#                                            {{ room.order_set.first.order_number }}{% endif %}</td>#}
                                         <td>
                                             <a href="{% url 'room_edit' room.id %}"
                                                class="btn btn-primary btn-sm">编辑</a>
@@ -54,6 +54,11 @@
                                 {% endfor %}
                                 </tbody>
                             </table>
+                            {% if room_data %}
+                                <ul class="pagination">
+                                    {{ page_string_room }}
+                                </ul>
+                            {% endif %}
                             <hr>
                             <div class="text-center">
                                 {% if search_data %}
@@ -101,6 +106,11 @@
                                 {% endfor %}
                                 </tbody>
                             </table>
+                            {% if room_type_data %}
+                                <ul class="pagination">
+                                    {{ page_string_roomType }}
+                                </ul>
+                            {% endif %}
                             <hr>
                             <div class="text-center">
                                 {% if search_data %}

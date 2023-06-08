@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 
 from hotel.forms.forms import CustomerModelForm
 from hotel.models import Customer
+from hotel.utils.pagination import Pagination
 
 
 def customer_list(request):
@@ -23,8 +24,11 @@ def customer_list(request):
 		data_dict["customer_creator"] = request.session.get("user")["id"]
 		total = Customer.objects.filter(**data_dict).count()
 	customer_data = Customer.objects.filter(**data_dict)
+	page_object = Pagination(request, customer_data, page_size=10)
+	page_object.html()
 	context = {
-		"customer_data": customer_data,
+		"customer_data": page_object.page_queryset,
+		"page_string": page_object.page_string,
 		"search_data": search_data,
 		"search_method": search_method,
 		"customer_total": total,

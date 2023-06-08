@@ -69,6 +69,11 @@
                             {% endfor %}
                             </tbody>
                         </table>
+                        {% if order_data %}
+                            <ul class="pagination">
+                                {{ page_string }}
+                            </ul>
+                        {% endif %}
                         <hr>
                         <div class="text-center">
                             {% if search_data %}

@@ -198,6 +198,7 @@ class RoomModelForm(BootStrapModelForm):
 
 
 class RoomTypeModelForm(BootStrapModelForm):
+
 	class Meta:
 		model = RoomType
 		fields = "__all__"

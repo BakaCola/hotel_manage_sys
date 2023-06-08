@@ -170,9 +170,13 @@
                     </div>
                     <div class="card-body">
                         <ul>
+                        {% if notice %}
                             {% for ele in notice %}
-                                <li class="notice_content"><a href="{% url 'notice_detail' ele.id %}" target="_blank">{{ ele.notice_title }}</a></li>
+                                <li class="notice_content"><a href="{% url 'notice_detail' ele.id %}" style="text-decoration: none" target="_blank">{{ ele.notice_title }}</a></li>
                             {% endfor %}
+                        {% else %}
+                            <li>暂无公告</li>
+                        {% endif %}
                         </ul>
                     </div>
                 </div>

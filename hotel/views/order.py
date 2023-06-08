@@ -3,6 +3,7 @@ from django.views import View
 from django.views.generic import DetailView
 
 from hotel.models import Order, OrderDetail, Room
+from hotel.utils.pagination import Pagination
 
 
 class OrderList(View):
@@ -15,8 +16,11 @@ class OrderList(View):
 			data_dict["order_creator"] = request.session.get("user")["id"]
 			order = Order.objects.filter(**data_dict)
 			order_total = Order.objects.filter(**data_dict).count()
+		page_object = Pagination(request, order, page_size=10)
+		page_object.html()
 		context = {
-			"order_data": order,
+			"order_data": page_object.page_queryset,
+			"page_string": page_object.page_string,
 			"order_total": order_total
 		}
 		return render(request, "order_list.html", context)

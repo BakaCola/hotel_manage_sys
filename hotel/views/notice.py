@@ -4,6 +4,7 @@ from django.views import View
 
 from hotel.models import Notice
 from hotel.forms.forms import NoticeModelForm
+from hotel.utils.pagination import Pagination
 
 
 def notice_list(request):
@@ -28,8 +29,11 @@ def notice_manage(request):
 		}
 		data_dict[method[search_method]] = search_data
 	notice = Notice.objects.filter(**data_dict)
+	page_object = Pagination(request, notice, page_size=10)
+	page_object.html()
 	context = {
-		"notice": notice,
+		"notice": page_object.page_queryset,
+		"page_string": page_object.page_string,
 		"search_data": search_data,
 		"search_method": search_method,
 		"notice_total": Notice.objects.all().count(),

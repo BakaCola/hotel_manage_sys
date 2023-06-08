@@ -38,6 +38,8 @@
 
                 </form>
                 <hr>
+{#            {% debug %}#}
+            {% if roomType_data %}
                 {% for room, room_count in roomType_data %}
                     <div class="card">
                         <div class="row g-0">
@@ -63,7 +65,11 @@
                         </div>
                     </div>
                 {% endfor %}
+            {% else %}
+                <div class="text-center text-danger h4">暂无可用房型！</div>
+            {% endif %}
             </div>
+
         </div>
     </div>
 {% endblock %}
