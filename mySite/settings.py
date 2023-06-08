@@ -131,6 +131,9 @@ EMAIL_PORT = 25  # SMTP服务的端口号
 EMAIL_HOST_USER = '自己的qq邮箱'  # 发送邮件的QQ邮箱
 EMAIL_HOST_PASSWORD = '自己的授权码'  # 在QQ邮箱->设置->帐户->“POP3/IMAP......服务” 里得到的在第三方登录QQ邮箱授权码
 
+
+CAPTCHA_TIMEOUT = 3  # 验证码过期时间，单位为分钟
+
 WHITE_LIST = [
 	re.compile(r"^/login/?$"),  # 匹配/login或/login/
 	re.compile(r"^/register/?$"),  # 匹配/register或/register/
