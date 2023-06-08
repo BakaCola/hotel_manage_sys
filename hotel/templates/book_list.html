@@ -21,10 +21,10 @@
                 <form id="date-form">
                     {% csrf_token %}
                     <label for="st" class="form-label">入住日期：</label>
-                    <input type="date" class="form-control me-4" name="st" id="st" value="{{ st }}"
+                    <input type="date" class="form-control me-4" name="st" id="st" value="{{ today }}"
                            min="{{ today }}" style="width: 10rem; display: inline-block" required>
                     <label for="ed" class="form-label">退房日期：</label>
-                    <input type="date" class="form-control me-4" name="ed" id="ed" value="{{ ed }}"
+                    <input type="date" class="form-control me-4" name="ed" id="ed" value="{{ tomorrow }}"
                            min="{{ tomorrow }}" style="width: 10rem; display: inline-block" required>
                     <label class="form-label" for="num">房间数：</label>
                     <input type="number" class="form-control me-4" max="5" min="1" value="1" name="num" id="num"
@@ -190,6 +190,7 @@
         var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
         // 绑定点击事件
         $(".btnCheck").click(function () {
+
             // 获取房型id
             var type_id = $(this).data("type-id");
             // 获取入住时间
@@ -209,14 +210,25 @@
                 },
                 dataType: "json",
                 type: "POST",
-                success: function (res, status) {
+                success: function (res) {
                     // 根据返回的json数据中的url属性，来设置window.location.href，从而实现跳转到订单详细页
-                    window.location.href = "{% url 'book_check' %}"; // 跳转到处理数据的网址
+                    console.log(res);
+                    if (res.url) {
+                        window.location.href = res.url;
+                    }
+                    if (res.error == 1) {
+                        alert("超出预定房间上限！");
+                    } else if (res.error == 2) {
+                        alert("时间范围错误！");
+                    } else if (res.error == 3) {
+                        alert("房间数错误！请重新查询后再预定！");
+                    }
+
                     {#console.log(res.status);#}
                 },
                 error: function (res) {
                     // 处理错误的响应
-                    alert(res.status);
+                    console.log(res);
                 }
             });
         });
