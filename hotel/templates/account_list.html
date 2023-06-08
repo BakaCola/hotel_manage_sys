@@ -54,7 +54,7 @@
                                 <th>电话号码</th>
                                 <th>邮箱</th>
                                 <th>账户类型</th>
-{#                                <th>账户状态</th>#}
+                                {#                                <th>账户状态</th>#}
                                 <th>操作</th>
                             </tr>
                             </thead>
@@ -67,7 +67,7 @@
                                     <td>{{ obj.account_phone }}</td>
                                     <td>{{ obj.account_email }}</td>
                                     <td>{{ obj.get_account_type_display }}</td>
-{#                                    <td>{{ obj.get_account_status_display }}</td>#}
+                                    {#                                    <td>{{ obj.get_account_status_display }}</td>#}
                                     <td>
                                         <a class="btn btn-primary btn-sm"
                                            href="{% url 'account_edit' obj.id %}">编辑</a>
@@ -84,6 +84,9 @@
                             {% endfor %}
                             </tbody>
                         </table>
+                        <ul class="pagination">
+                            {{ page_string }}
+                        </ul>
                         <hr>
                         <div class="text-center">
                             {% if search_data %}
