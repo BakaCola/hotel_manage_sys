@@ -10,7 +10,7 @@ from django.core.validators import RegexValidator
 import bcrypt
 
 from hotel.utils.bootstrapForm import BootStrapModelForm, BootStrapForm
-from hotel.models import Account, Customer, Notice, Room, RoomType
+from hotel.models import Account, Customer, Notice, Room, RoomType, Order, OrderDetail
 
 
 # from hotel.utils.encrypt import md5
@@ -54,7 +54,7 @@ class AccountModelForm(BootStrapModelForm):
 
 	class Meta:
 		model = Account
-		fields = ['account_user', 'account_name', 'account_phone', 'account_email', 'account_type', 'account_status']
+		fields = ['account_user', 'account_name', 'account_phone', 'account_email', 'account_type']
 
 
 class AccountAddModelForm(AccountModelForm):
@@ -108,7 +108,7 @@ class AccountAddModelForm(AccountModelForm):
 	class Meta:
 		model = Account
 		fields = ['account_user', 'account_name', 'account_password', 'confirm_password', 'account_phone',
-		          'account_email', 'account_type', 'account_status']
+		          'account_email', 'account_type']
 
 
 class AccountRegisterModelForm(AccountAddModelForm):
@@ -148,7 +148,7 @@ class CustomerModelForm(BootStrapModelForm):
 
 	class Meta:
 		model = Customer
-		exclude = ['id', 'customer_status']
+		exclude = ['id']
 		widgets = {
 			"customer_creator": forms.HiddenInput(),
 		}
@@ -201,3 +201,10 @@ class RoomTypeModelForm(BootStrapModelForm):
 	class Meta:
 		model = RoomType
 		fields = "__all__"
+
+
+class OrderModelForm(BootStrapModelForm):
+	class Meta:
+		model = Order
+		exclude = ["order_idNumber", "order_creator", "order_time", "order_status"]
+

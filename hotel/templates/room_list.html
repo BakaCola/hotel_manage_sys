@@ -16,7 +16,7 @@
 {% block content %}
     <div class="container">
         <div class="row">
-            <div class="col-lg-7">
+            <div class="col-lg-6">
                 <div class="card">
                     <div class="card-header">
                         <span class="h3">客房管理</span>
@@ -31,7 +31,7 @@
                                     <th>客房号</th>
                                     <th>客房类型</th>
                                     <th>客房状态</th>
-                                    <th>生效订单</th>
+{#                                    <th>生效订单</th>#}
                                     <th>操作</th>
                                 </tr>
                                 </thead>
@@ -42,7 +42,8 @@
                                         <td>{% if room.room_type %}{{ room.room_type.roomType_name }}{% else %}
                                             未设置房型{% endif %}</td>
                                         <td>{{ room.get_room_status_display }}</td>
-                                        <td>{{ room.order_set.first.order_idNumber }}</td>
+{#                                        <td>{% if room.order_set.first.order_status < 2 %}#}
+{#                                            {{ room.order_set.first.order_number }}{% endif %}</td>#}
                                         <td>
                                             <a href="{% url 'room_edit' room.id %}"
                                                class="btn btn-primary btn-sm">编辑</a>
@@ -65,7 +66,7 @@
                 </div>
             </div>
 
-            <div class="col-lg-5">
+            <div class="col-lg-6">
                 <div class="card">
                     <div class="card-header">
                         <span class="h3">房型管理</span>
@@ -79,6 +80,7 @@
                                 <thead class="table-primary">
                                 <tr>
                                     <th>客房类型</th>
+                                    <th>最大入住人数</th>
                                     <th>客房价格</th>
                                     <th>操作</th>
                                 </tr>
@@ -87,6 +89,7 @@
                                 {% for room in room_type_data %}
                                     <tr>
                                         <td>{{ room.roomType_name }}</td>
+                                        <td>{{ room.roomType_max }}</td>
                                         <td>{{ room.roomType_price }}</td>
                                         <td>
                                             <a href="{% url 'room_type_edit' room.id %}"

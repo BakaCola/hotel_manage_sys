@@ -68,24 +68,24 @@
                                     <td>{{ obj.get_order_status_display }}</td>
 
                                     <td>
-                                        <a class="btn btn-primary btn-sm" href="#">查看详细</a>
+                                        <a class="btn btn-primary btn-sm" href="#">查看</a>
                                         {% if request.session.user.type == 1 %}
 
                                             <button type="button" class="btn btn-danger btn-sm btn-delete"
                                                     uid="{{ obj.id }}"
-                                                    {% if obj.order_status >= 2 %}disabled{% endif %}>取消订单
+                                                    {% if obj.order_status >= 2 %}disabled{% endif %}>取消
                                             </button>
                                             {% if not obj.order_status == 0 %}
-                                                <a class="btn btn-success btn-sm disabled">确认入住</a>
+                                                <a class="btn btn-success btn-sm disabled">入住</a>
                                             {% else %}
                                                 <a class="btn btn-success btn-sm"
-                                                   href="{% url 'order_set_status' %}?id={{ obj.id }}&status=1">确认入住</a>
+                                                   href="{% url 'order_set_status' %}?id={{ obj.id }}&status=1">入住</a>
                                             {% endif %}
                                             {% if not obj.order_status == 1 %}
-                                                <a class="btn btn-warning btn-sm disabled">确认退房</a>
+                                                <a class="btn btn-warning btn-sm disabled">退房</a>
                                             {% else %}
                                                 <a class="btn btn-warning btn-sm"
-                                                   href="{% url 'order_set_status' %}?id={{ obj.id }}&status=2">确认退房</a>
+                                                   href="{% url 'order_set_status' %}?id={{ obj.id }}&status=2">退房</a>
                                             {% endif %}
                                         {% endif %}
 
