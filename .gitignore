@@ -272,3 +272,4 @@ GitHub.sublime-settings
 .history
 /hotel/migrations/
 /hotel/views/test.py
+/database_backup.json
