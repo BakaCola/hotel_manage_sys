@@ -4,14 +4,29 @@
 
 {% block content %}
     <div class="container">
-        <div class="alert alert-danger col-lg-6 mx-auto" role="alert">
-            <h3 class="alert-danger"><i class="bi bi-exclamation-triangle-fill me-3"></i>错误！</h3>
-            <hr>
-            <p class="mb-0">
-            <p>{{ msg }}</p></p>
-            <div class="modal-footer">即将在<span>10</span>秒后跳转至<a href="{{link}}" class="alert-link">{{ link_text }}</a></div>
-        </div>
+{#        {% debug %}#}
+        {% if code_type == 2 %}
+            <div class="alert alert-success col-lg-6 mx-auto" role="alert">
+                <h3 class="alert-success"><i class="bi bi-check-circle-fill me-3"></i>成功！</h3>
+                <hr>
+                <p class="mb-0">
+                <p>{{ msg }}</p></p>
+                <div class="modal-footer">即将在<span>10</span>秒后跳转至<a href="{{ link }}"
+                                                                            class="alert-link">{{ link_text }}</a></div>
+            </div>
+        {% else %}
+            <div class="alert alert-danger col-lg-6 mx-auto" role="alert">
+
+                <h3 class="alert-danger"><i class="bi bi-exclamation-triangle-fill me-3"></i>错误！</h3>
+                <hr>
+                <p class="mb-0">
+                <p>{{ msg }}</p></p>
+                <div class="modal-footer">即将在<span>10</span>秒后跳转至<a href="{{ link }}"
+                                                                            class="alert-link">{{ link_text }}</a></div>
+            </div>
+        {% endif %}
     </div>
+
 {% endblock %}
 
 

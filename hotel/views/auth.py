@@ -48,13 +48,19 @@ def alert(request):
 	code_explain = {
 		"401": "您当前未登录！请先登录后在进行操作！",
 		"403": "当前用户权限不足！请确认所登录的账户是否有权限访问该页面！",
+		"405": "数据恢复失败！",
+		"201": "数据恢复成功！"
 
 	}
 	code_link = {
 		"401": reverse_lazy("login"),
+		"405": reverse_lazy("recover_db"),
+		"201": reverse_lazy("index"),
 	}
 	link_text = {
 		"401": "登录页",
+		"201": "首页",
+		"405": "数据恢复页",
 	}
 	code = request.GET.get("code")
 	next_url = request.GET.get("next")
@@ -72,8 +78,12 @@ def alert(request):
 		else:
 			link = reverse_lazy("index")
 			text = "首页"
+		context["code_type"] = int(int(code) / 100)
 		context["msg"] = msg
-		context["link"] = link + "?next=" + next_url
+		if next_url:
+			context["link"] = link + "?next=" + next_url
+		else:
+			context["link"] = link
 		context["link_text"] = text
 	if code == "404":
 		return HttpResponseNotFound(render(request, "alert.html", context))

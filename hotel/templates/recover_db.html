@@ -1,0 +1,47 @@
+{% extends 'layout.html' %}
+{% load django_bootstrap5 %}
+{% block content %}
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h4>备份与恢复数据</h4>
+            </div>
+            <div class="card-body">
+                <button type="button" class="btn btn-primary" id="backup-button">备份数据</button>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% bootstrap_form form %}
+                    <button type="submit" class="btn btn-warning">恢复数据</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script>
+        // 备份数据库的函数
+        function backupDatabase() {
+            // 发送异步请求到后端备份数据库的URL
+            fetch('{% url 'backup_db' %}')
+                .then(response => {
+                    // 将响应转换为文件下载
+                    response.blob().then(blob => {
+                        const url = window.URL.createObjectURL(blob);
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.download = 'database_backup.json';
+                        link.click();
+                        window.URL.revokeObjectURL(url);
+                    });
+                })
+                .catch(error => {
+                    console.error('备份数据库失败:', error);
+                });
+        }
+
+        // 监听备份按钮的点击事件
+        const backupButton = document.getElementById('backup-button');
+        backupButton.addEventListener('click', backupDatabase);
+    </script>
+{% endblock %}

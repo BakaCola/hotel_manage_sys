@@ -212,3 +212,8 @@ class OrderModelForm(BootStrapModelForm):
 	class Meta:
 		model = Order
 		exclude = ["order_idNumber", "order_creator", "order_time", "order_status"]
+
+
+class RecoverDBForm(BootStrapForm):
+	file = forms.FileField(label="数据库备份文件", required=True)
+	confirm = forms.BooleanField(label="确认恢复数据库", required=True)

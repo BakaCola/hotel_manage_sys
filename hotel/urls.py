@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import index, auth, account, customer, notice, room, book, order
+from .views import index, auth, account, customer, notice, room, book, order, sql
 from .views import test
 
 urlpatterns = [
@@ -47,5 +47,8 @@ urlpatterns = [
 	path("customer/add/", customer.customer_add, name="customer_add"),
 	path("customer/<int:pk>/edit/", customer.customer_edit, name="customer_edit"),
 	path("customer/<int:pk>/del/", customer.customer_del, name="customer_del"),
+
+	path("db/", sql.recover_db, name="recover_db"),
+	path("db/backup/", sql.backup_db, name="backup_db"),
 
 ]
