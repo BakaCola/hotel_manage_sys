@@ -33,7 +33,7 @@ class Pagination(object):
 		if type(page) != int:
 			# 强制让页码为1
 			page = 1
-		if page <= 0 or page > total_page_count:
+		if page <= 0 or page > total_page_count + 1:
 			page = 1
 
 		self.page = page
